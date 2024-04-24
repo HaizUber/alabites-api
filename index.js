@@ -4,7 +4,6 @@ require('dotenv').config();
 require('./db');
 const PORT = process.env.PORT || 8080;
 const productRoutes = require('./routes/productRoutes');
-const userRoutes = require('./routes/userRoutes');
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -16,8 +15,6 @@ app.get('/ping', (req, res) => {
 });
 // /products
 app.use('/products', productRoutes);
-// /users
-app.use('/users', userRoutes);
 
 app.listen(8080, () => {
     console.log('Server is listenin on PORT :' + PORT);

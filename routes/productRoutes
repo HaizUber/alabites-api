@@ -3,7 +3,7 @@ const { createProduct,
     getProducts,
     getProductById,
     updateProductById,
-    deleteById } = require('../conrollers/productController');
+    deleteById } = require('../controllers/productController');
 
 const router = require('express').Router();
 
