@@ -23,20 +23,8 @@ app.use('/products', async (req, res, next) => {
       return res.status(200).json(data);
     }
     
-    // Define a function to fetch data from MongoDB
-    const fetchFromMongoDB = async () => {
-      try {
-        // Implement your MongoDB query here
-        const dataFromMongoDB = await Product.find(); // Example MongoDB query using your product model
-        return dataFromMongoDB;
-      } catch (error) {
-        console.error("Error fetching data from MongoDB:", error);
-        return null;
-      }
-    };
-
-    // Call fetchFromMongoDB only if cache is empty
-    const dbData = await fetchFromMongoDB();
+    // Fetch data from MongoDB only if cache is empty
+    const dbData = await Product.find(); // Example MongoDB query using your product model
     if (dbData) {
       // Cache the fetched data
       cacheResponse(cacheKey, dbData);
