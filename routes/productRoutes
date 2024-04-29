@@ -8,12 +8,21 @@ const router = require('express').Router();
 
 // CORS middleware
 router.use((req, res, next) => {
-  // Allow requests from localhost:3000 and https://alabites-ordering-app.vercel.app/
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000, https://alabites-ordering-app.vercel.app/');
+  // Extract the origin from the request headers
+  const origin = req.headers.origin;
+
+  // Check if the origin is allowed
+  if (origin && (origin === 'http://localhost:3000' || origin === 'https://alabites-ordering-app.vercel.app/')) {
+    // Set the Access-Control-Allow-Origin header with the allowed origin
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
+  // Set other CORS headers
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
+
 
 
 // Define your routes below
