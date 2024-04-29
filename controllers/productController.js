@@ -1,72 +1,79 @@
 const Product = require('../models/Product');
 
+// Create a new product
 const createProduct = async (req, res) => {
-    const body = req.body;
-    console.log('userInfo ', req.userInfo);
+    const { name, description, price, store, category } = req.body;
     try {
-        const product = new Product(body);
+        const product = new Product({ name, description, price, store, category });
         const result = await product.save();
-        res.status(201)
-            .json({ message: "created", result });
+        res.status(201).json({ message: "success", data: result });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        console.error("Error creating product:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
+// Get all products
 const getProducts = async (req, res) => {
     try {
-        const results = await Product.find({});
-        res.status(200)
-            .json({ message: "success", data: results });
+        const products = await Product.find({});
+        res.status(200).json({ message: "success", data: products });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        console.error("Error getting products:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
+// Get a product by ID
 const getProductById = async (req, res) => {
+    const { id } = req.params;
     try {
-        const id = req.params.id;
-        const result = await Product.findById(id);
-        res.status(200)
-            .json({ message: "success", data: result });
+        const product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json({ message: "success", data: product });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        console.error("Error getting product by ID:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
+// Update a product by ID
 const updateProductById = async (req, res) => {
+    const { id } = req.params;
+    const { name, description, price, store, category } = req.body;
     try {
-        const id = req.params.id;
-        const body = req.body;
-        const updateDoc = { $set: { ...body } };
-        updateDoc.updatedAt = Date.now();
-        await Product.findByIdAndUpdate(id, updateDoc);
-        res.status(200)
-            .json({ message: "updated" });
+        const updatedProduct = await Product.findByIdAndUpdate(id, { name, description, price, store, category }, { new: true });
+        if (!updatedProduct) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json({ message: "success", data: updatedProduct });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        console.error("Error updating product by ID:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
-const deleteById = async (req, res) => {
+// Delete a product by ID
+const deleteProductById = async (req, res) => {
+    const { id } = req.params;
     try {
-        const id = req.params.id;
-        await Product.findByIdAndDelete(id);
-        res.status(200)
-            .json({ message: "deleted" });
+        const deletedProduct = await Product.findByIdAndDelete(id);
+        if (!deletedProduct) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json({ message: "success", data: deletedProduct });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        console.error("Error deleting product by ID:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
+
 module.exports = {
     createProduct,
     getProducts,
     getProductById,
     updateProductById,
-    deleteById
+    deleteProductById
 }
