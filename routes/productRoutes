@@ -6,10 +6,19 @@ const { createProduct,
 
 const router = require('express').Router();
 
-router.post('/',  createProduct); //secure
+// CORS middleware
+router.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
+// Define your routes below
+router.post('/', createProduct); //secure
 router.get('/', getProducts);
 router.get('/:id', getProductById);
 router.put('/:id', updateProductById);//secure
-router.delete('/:id',  deleteById);//secure
+router.delete('/:id', deleteById);//secure
 
-module.exports = router
+module.exports = router;
