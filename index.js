@@ -4,18 +4,24 @@ require('dotenv').config();
 require('./db');
 const PORT = process.env.PORT || 8080;
 const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes'); // Import user routes
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send('products api running new deploy');
+    res.send('alabites api running and ready to break ;-;');
 });
 
 app.get('/ping', (req, res) => {
     res.send('PONG')
 });
-// /products
+
+// Mount product routes
 app.use('/products', productRoutes);
 
-app.listen(8080, () => {
-    console.log('Server is listenin on PORT :' + PORT);
-})
+// Mount user routes
+app.use('/users', userRoutes); // Use '/users' as the base path for user routes
+
+app.listen(PORT, () => {
+    console.log('Server is listening on PORT: ' + PORT);
+});
