@@ -9,6 +9,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    firstName: {
+        type: String, // Add firstName field
+        required: true
+    },
+    lastName: {
+        type: String, // Add lastName field
+        required: true
+    },
     username: {
         type: String,
         required: true
