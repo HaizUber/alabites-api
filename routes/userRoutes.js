@@ -1,4 +1,4 @@
-const { createUser, getUsers, getUserById } = require('../controllers/userController');
+const { createUser, getUsers, getUserById, updateUserById, deleteUserById  } = require('../controllers/userController');
 const router = require('express').Router();
 
 // CORS middleware
@@ -14,5 +14,7 @@ router.use((req, res, next) => {
 router.post('/', createUser); // Route for creating a new user
 router.get('/', getUsers); // Route for fetching all users
 router.get('/:id', getUserById); // Route for fetching a user by ID
+router.put('/:id', updateUserById); // Route for updating a user by ID
+router.delete('/:id', deleteUserById); // Route for deleting a user by ID
 
 module.exports = router;
