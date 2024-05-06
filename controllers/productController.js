@@ -63,10 +63,33 @@ const deleteById = async (req, res) => {
             .json({ message: "Internal server error" });
     }
 }
+
+const getProductByQuery = async (req, res) => {
+    const query = req.params.query;
+    try {
+        const result = await Product.findOne({
+            $or: [
+                { pid: query },
+                { productName: query },
+                { price: query },
+                { store: query },
+                { category: query }
+            ]
+        });
+        if (!result) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json({ message: "Success", data: result });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 module.exports = {
     createProduct,
     getProducts,
     getProductById,
+    getProductByQuery,
     updateProductById,
     deleteById
 }

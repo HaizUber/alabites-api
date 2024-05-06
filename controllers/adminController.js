@@ -64,10 +64,32 @@ const deleteAdminById = async (req, res) => {
     }
 }
 
+const getAdminByQuery = async (req, res) => {
+    const query = req.params.query;
+    try {
+        const result = await Admin.findOne({
+            $or: [
+                { uid: query },
+                { email: query },
+                { username: query },
+                { role: query }
+            ]
+        });
+        if (!result) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+        res.status(200).json({ message: "Success", data: result });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
 module.exports = {
     createAdmin,
     getAdmins,
     getAdminById,
+    getAdminByQuery,
     updateAdminById,
     deleteAdminById
 }

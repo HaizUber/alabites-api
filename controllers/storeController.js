@@ -71,7 +71,8 @@ const getStoreByQuery = async (req, res) => {
         const result = await Store.findOne({
             $or: [
                 { storeId: query },
-                { storeName: query }
+                { storeName: query },
+                { storeOwner: query } // Add querying by storeOwner
             ]
         });
         if (!result) {
@@ -82,6 +83,7 @@ const getStoreByQuery = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 module.exports = {
     createStore,

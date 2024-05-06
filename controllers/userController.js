@@ -65,10 +65,29 @@ const deleteUserById = async (req, res) => {
     }
 };
 
+const getUsersByQuery = async (req, res) => {
+    const query = req.params.query;
+    try {
+        const users = await User.find({
+            $or: [
+                { uid: query },
+                { email: query },
+                { username: query },
+                { studentNumber: query }
+            ]
+        });
+        res.status(200).json({ message: "Success", data: users });
+    } catch (error) {
+        console.error("Error fetching users by query:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 module.exports = {
     createUser,
     getUsers,
     getUserById,
+    getUsersByQuery,
     updateUserById,
     deleteUserById
 };

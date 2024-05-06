@@ -30,6 +30,10 @@ const adminSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    updatedAt: {
+        type: Date,
+        default: Date.now()
+    },
     stores: [
         {
             type: mongoose.Schema.Types.ObjectId,

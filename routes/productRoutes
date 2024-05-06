@@ -2,7 +2,8 @@ const { createProduct,
     getProducts,
     getProductById,
     updateProductById,
-    deleteById } = require('../controllers/productController');
+    deleteById,
+  getProductByQuery } = require('../controllers/productController');
 
 const router = require('express').Router();
 
@@ -16,11 +17,13 @@ router.use((req, res, next) => {
 });
 
 
-// Define your routes below
-router.post('/', createProduct); //secure
-router.get('/', getProducts);
-router.get('/:id', getProductById);
-router.put('/:id', updateProductById);//secure
-router.delete('/:id', deleteById);//secure
+// Define your product routes below
+router.post('/', createProduct); // Route for creating a new product (secure)
+router.get('/', getProducts); // Route for fetching all products
+router.get('/query/:query', getProductByQuery); // Route for querying products by PID, productName, price, store, or category
+router.get('/:id', getProductById); // Route for fetching a product by ID
+router.put('/:id', updateProductById); // Route for updating a product by ID (secure)
+router.delete('/:id', deleteById); // Route for deleting a product by ID (secure)
+
 
 module.exports = router;
