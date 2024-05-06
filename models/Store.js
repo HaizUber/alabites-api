@@ -19,10 +19,10 @@ const storeSchema = new mongoose.Schema({
         required: true
     },
     storeOwner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Admin',
+        type: String, 
         required: true
     }
 });
+
 
 module.exports = mongoose.model('Store', storeSchema);
