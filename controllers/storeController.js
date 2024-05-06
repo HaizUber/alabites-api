@@ -2,7 +2,6 @@ const Store = require('../models/Store');
 
 const createStore = async (req, res) => {
     const storeData = req.body;
-    const storeName = req.params.storeName; // If store name is needed
     try {
         // Extract the ID of the admin creating the store
         const adminId = req.userInfo._id;

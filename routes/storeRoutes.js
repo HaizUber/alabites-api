@@ -11,7 +11,7 @@ router.use((req, res, next) => {
 });
 
 // Define your store routes below
-router.post('/:storeName', createStore); // Route for creating a new store
+router.post('/', createStore); // Route for creating a new store
 router.get('/', getStores); // Route for fetching all stores
 router.get('/:id', getStoreById); // Route for fetching a store by ID
 router.put('/:id', updateStoreById); // Route for updating a store by ID
