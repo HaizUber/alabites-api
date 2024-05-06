@@ -71,6 +71,7 @@ const getUsersByQuery = async (req, res) => {
         const users = await User.find({
             $or: [
                 { uid: query },
+                { firebaseUID: query },
                 { email: query },
                 { username: query },
                 { studentNumber: query }

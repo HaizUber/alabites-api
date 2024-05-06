@@ -5,6 +5,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    firebaseUID: { // Add firebaseUID field
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true

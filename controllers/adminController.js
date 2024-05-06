@@ -70,6 +70,7 @@ const getAdminByQuery = async (req, res) => {
         const result = await Admin.findOne({
             $or: [
                 { uid: query },
+                { firebaseUID: query },
                 { email: query },
                 { username: query },
                 { role: query }
