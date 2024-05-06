@@ -1,4 +1,4 @@
-const { createStore, getStores, getStoreById, updateStoreById, deleteStoreById } = require('../controllers/storeController');
+const { createStore, getStores, getStoreById, updateStoreById, deleteStoreById, getStoreByQuery } = require('../controllers/storeController');
 const router = require('express').Router();
 
 // CORS middleware
@@ -16,5 +16,6 @@ router.get('/', getStores); // Route for fetching all stores
 router.get('/:id', getStoreById); // Route for fetching a store by ID
 router.put('/:id', updateStoreById); // Route for updating a store by ID
 router.delete('/:id', deleteStoreById); // Route for deleting a store by ID
+router.get('/query/:query', getStoreByQuery); // Route for fetching a store by storeId or storeName
 
 module.exports = router;

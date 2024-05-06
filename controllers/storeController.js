@@ -65,10 +65,29 @@ const deleteStoreById = async (req, res) => {
     }
 }
 
+const getStoreByQuery = async (req, res) => {
+    const query = req.params.query;
+    try {
+        const result = await Store.findOne({
+            $or: [
+                { storeId: query },
+                { storeName: query }
+            ]
+        });
+        if (!result) {
+            return res.status(404).json({ message: "Store not found" });
+        }
+        res.status(200).json({ message: "Success", data: result });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 module.exports = {
     createStore,
     getStores,
     getStoreById,
     updateStoreById,
-    deleteStoreById
+    deleteStoreById,
+    getStoreByQuery
 }
