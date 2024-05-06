@@ -22,14 +22,20 @@ const adminSchema = new mongoose.Schema({
         required: true
     },
     role: {
-        type: String, // Add role field
+        type: String,
         required: true,
-        enum: ['Overseer Admin', 'Merchant Admin', 'Manager'] // Define possible roles
+        enum: ['Overseer Admin', 'Merchant Admin', 'Manager']
     },
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    stores: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Store'
+        }
+    ]
 });
 
 module.exports = mongoose.model('Admin', adminSchema);
