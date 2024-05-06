@@ -3,12 +3,6 @@ const Store = require('../models/Store');
 const createStore = async (req, res) => {
     const storeData = req.body;
     try {
-        // Extract the ID of the admin creating the store
-        const adminId = req.userInfo._id;
-
-        // Assign the admin ID as the store owner
-        storeData.storeOwner = adminId;
-
         const store = new Store(storeData);
         const result = await store.save();
 
@@ -19,6 +13,7 @@ const createStore = async (req, res) => {
             .json({ message: "Cannot Create Store: Internal server error" });
     }
 }
+
 
 const getStores = async (req, res) => {
     try {
