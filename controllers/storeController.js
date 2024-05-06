@@ -16,7 +16,7 @@ const createStore = async (req, res) => {
             .json({ message: "Store created successfully", result });
     } catch (err) {
         res.status(500)
-            .json({ message: "Internal server error" });
+            .json({ message: "Cannot Create Store: Internal server error" });
     }
 }
 
@@ -27,7 +27,7 @@ const getStores = async (req, res) => {
             .json({ message: "Success", data: results });
     } catch (err) {
         res.status(500)
-            .json({ message: "Internal server error" });
+            .json({ message: "Cannot Get Store: Internal server error" });
     }
 }
 
@@ -39,7 +39,7 @@ const getStoreById = async (req, res) => {
             .json({ message: "Success", data: result });
     } catch (err) {
         res.status(500)
-            .json({ message: "Internal server error" });
+            .json({ message: "Cannot Get StorebyID: Internal server error" });
     }
 }
 
@@ -54,7 +54,7 @@ const updateStoreById = async (req, res) => {
             .json({ message: "Store updated successfully" });
     } catch (err) {
         res.status(500)
-            .json({ message: "Internal server error" });
+            .json({ message: "Cannot Update StorebyID: Internal server error" });
     }
 }
 
@@ -66,7 +66,7 @@ const deleteStoreById = async (req, res) => {
             .json({ message: "Store deleted successfully" });
     } catch (err) {
         res.status(500)
-            .json({ message: "Internal server error" });
+            .json({ message: "Cannot Delete StorebyID: Internal server error" });
     }
 }
 
