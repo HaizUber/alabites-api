@@ -43,12 +43,17 @@ const updateAdminById = async (req, res) => {
     try {
         const uid = req.params.uid; // Extract UID from request parameters
         const body = req.body;
-        const updateDoc = { $set: { ...body } };
-        updateDoc.updatedAt = Date.now();
-        
+
+        // Construct update document
+        const updateDoc = {
+            $set: { ...body }, // Update admin details
+            $addToSet: { stores: { storeId: body.storeId, storeName: body.storeName } } // Add new store to stores array
+        };
+        updateDoc.updatedAt = Date.now(); // Update updatedAt field
+
         // Find admin by UID and update
         const updatedAdmin = await Admin.findOneAndUpdate({ uid }, updateDoc, { new: true });
-        
+
         if (!updatedAdmin) {
             return res.status(404).json({ message: "Admin not found" });
         }
@@ -58,7 +63,8 @@ const updateAdminById = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
+
 
 
 const deleteAdminById = async (req, res) => {
