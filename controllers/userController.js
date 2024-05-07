@@ -40,16 +40,33 @@ const updateUserById = async (req, res) => {
     const uid = req.params.uid; // Change id to uid
     const updateData = req.body;
     try {
-        const updatedUser = await User.findOneAndUpdate({ uid }, updateData, { new: true }); // Find user by UID and update
+        // Construct update document
+        const updateDoc = {
+            $set: { // Update user details
+                firstName: updateData.firstName,
+                lastName: updateData.lastName,
+                email: updateData.email,
+                username: updateData.username,
+                avatar: updateData.avatar // Add avatar update
+            }
+        };
+
+        updateDoc.updatedAt = Date.now(); // Update updatedAt field
+
+        // Find user by UID and update
+        const updatedUser = await User.findOneAndUpdate({ uid }, updateDoc, { new: true });
+
         if (!updatedUser) {
             return res.status(404).json({ message: "User not found" });
         }
+        
         res.status(200).json({ message: "User updated", data: updatedUser });
     } catch (error) {
         console.error("Error updating user:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 const deleteUserById = async (req, res) => {
     const uid = req.params.uid; // Change id to uid

@@ -44,18 +44,31 @@ const updateStoreById = async (req, res) => {
     try {
         const storeId = req.params.storeId; // Change id to storeId
         const body = req.body;
-        const updateDoc = { $set: { ...body } };
-        updateDoc.updatedAt = Date.now();
-        const updatedStore = await Store.findOneAndUpdate({ storeId }, updateDoc, { new: true }); // Find store by storeId and update
+        
+        // Construct update document
+        const updateDoc = {
+            $set: {
+                storeName: body.storeName,
+                storeType: body.storeType,
+                description: body.description
+            }
+        };
+        
+        updateDoc.updatedAt = Date.now(); // Update updatedAt field
+        
+        // Find store by storeId and update
+        const updatedStore = await Store.findOneAndUpdate({ storeId }, updateDoc, { new: true });
+        
         if (!updatedStore) {
             return res.status(404).json({ message: "Store not found" });
         }
+        
         res.status(200).json({ message: "Store updated successfully", data: updatedStore });
     } catch (err) {
         console.error("Error updating store:", err);
         res.status(500).json({ message: "Cannot Update StorebyID: Internal server error" });
     }
-}
+};
 
 const deleteStoreById = async (req, res) => {
     try {

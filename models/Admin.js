@@ -5,7 +5,7 @@ const adminSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    firebaseUID: { // Add firebaseUID field
+    firebaseUID: {
         type: String,
         required: true
     },
@@ -30,6 +30,10 @@ const adminSchema = new mongoose.Schema({
         required: true,
         enum: ['Overseer Admin', 'Merchant Admin', 'Manager']
     },
+    avatar: {
+        type: String, // Store base64 photo link
+        required: false // Make it optional
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -37,13 +41,7 @@ const adminSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now()
-    },
-    stores: [
-        {
-            type: String, // Change type to String
-            ref: 'Store'
-        }
-    ]
+    }
 });
 
 module.exports = mongoose.model('Admin', adminSchema);

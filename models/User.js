@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    studentavatar: {
+        type: String, // Store base64 photo link
+        required: false // Make it optional
+    },
     createdAt: {
         type: Date,
         default: Date.now()

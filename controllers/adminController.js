@@ -46,7 +46,13 @@ const updateAdminById = async (req, res) => {
 
         // Construct update document
         const updateDoc = {
-            $set: { ...body }, // Update admin details
+            $set: { // Update admin details
+                firstName: body.firstName,
+                lastName: body.lastName,
+                email: body.email,
+                username: body.username,
+                avatar: body.avatar // Add avatar update
+            }
         };
         
         // If storeId is provided in the request body, add the new store to stores array
