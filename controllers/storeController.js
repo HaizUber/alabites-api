@@ -28,42 +28,49 @@ const getStores = async (req, res) => {
 
 const getStoreById = async (req, res) => {
     try {
-        const id = req.params.id;
-        const result = await Store.findById(id);
-        res.status(200)
-            .json({ message: "Success", data: result });
+        const storeId = req.params.storeId; // Change id to storeId
+        const result = await Store.findOne({ storeId }); // Find store by storeId
+        if (!result) {
+            return res.status(404).json({ message: "Store not found" });
+        }
+        res.status(200).json({ message: "Success", data: result });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Cannot Get StorebyID: Internal server error" });
+        console.error("Error fetching store:", err);
+        res.status(500).json({ message: "Cannot Get StorebyID: Internal server error" });
     }
 }
 
 const updateStoreById = async (req, res) => {
     try {
-        const id = req.params.id;
+        const storeId = req.params.storeId; // Change id to storeId
         const body = req.body;
         const updateDoc = { $set: { ...body } };
         updateDoc.updatedAt = Date.now();
-        await Store.findByIdAndUpdate(id, updateDoc);
-        res.status(200)
-            .json({ message: "Store updated successfully" });
+        const updatedStore = await Store.findOneAndUpdate({ storeId }, updateDoc, { new: true }); // Find store by storeId and update
+        if (!updatedStore) {
+            return res.status(404).json({ message: "Store not found" });
+        }
+        res.status(200).json({ message: "Store updated successfully", data: updatedStore });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Cannot Update StorebyID: Internal server error" });
+        console.error("Error updating store:", err);
+        res.status(500).json({ message: "Cannot Update StorebyID: Internal server error" });
     }
 }
 
 const deleteStoreById = async (req, res) => {
     try {
-        const id = req.params.id;
-        await Store.findByIdAndDelete(id);
-        res.status(200)
-            .json({ message: "Store deleted successfully" });
+        const storeId = req.params.storeId; // Change id to storeId
+        const deletedStore = await Store.findOneAndDelete({ storeId }); // Find store by storeId and delete
+        if (!deletedStore) {
+            return res.status(404).json({ message: "Store not found" });
+        }
+        res.status(200).json({ message: "Store deleted successfully" });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Cannot Delete StorebyID: Internal server error" });
+        console.error("Error deleting store:", err);
+        res.status(500).json({ message: "Cannot Delete StorebyID: Internal server error" });
     }
 }
+
 
 const getStoreByQuery = async (req, res) => {
     const query = req.params.query;

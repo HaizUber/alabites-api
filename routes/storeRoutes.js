@@ -13,9 +13,9 @@ router.use((req, res, next) => {
 // Define your store routes below
 router.post('/', createStore); // Route for creating a new store
 router.get('/', getStores); // Route for fetching all stores
-router.get('/:id', getStoreById); // Route for fetching a store by ID
-router.put('/:id', updateStoreById); // Route for updating a store by ID
-router.delete('/:id', deleteStoreById); // Route for deleting a store by ID
+router.get('/:storeId', getStoreById); // Route for fetching a store by storeId
+router.put('/:storeId', updateStoreById); // Route for updating a store by storeId
+router.delete('/:storeId', deleteStoreById); // Route for deleting a store by storeId
 router.get('/query/:query', getStoreByQuery); // Route for fetching a store by storeId or storeName
 
 module.exports = router;

@@ -41,29 +41,42 @@ const getAdminById = async (req, res) => {
 
 const updateAdminById = async (req, res) => {
     try {
-        const uid = req.params.uid; // Change id to uid
+        const uid = req.params.uid; // Extract UID from request parameters
         const body = req.body;
         const updateDoc = { $set: { ...body } };
         updateDoc.updatedAt = Date.now();
-        // Find admin by uid and update
-        await Admin.findOneAndUpdate({ uid }, updateDoc);
-        res.status(200)
-            .json({ message: "Admin updated successfully" });
-    } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
-    }
-}
+        
+        // Find admin by UID and update
+        const updatedAdmin = await Admin.findOneAndUpdate({ uid }, updateDoc, { new: true });
+        
+        if (!updatedAdmin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
 
-const deleteAdminById = async (req, res) => {
-    try {
-        const uid = req.params.id; // Change id to uid
-        await Admin.findOneAndDelete({ uid }); // Delete admin by uid
-        res.status(200).json({ message: "Admin deleted successfully" });
+        res.status(200).json({ message: "Admin updated successfully", data: updatedAdmin });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
+
+const deleteAdminById = async (req, res) => {
+    try {
+        const uid = req.params.uid; // Extract UID from request parameters
+        const deletedAdmin = await Admin.findOneAndDelete({ uid }); // Delete admin by UID
+        
+        if (!deletedAdmin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        res.status(200).json({ message: "Admin deleted successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 
 const getAdminByQuery = async (req, res) => {
     const query = req.params.query;

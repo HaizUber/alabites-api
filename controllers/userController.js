@@ -23,9 +23,9 @@ const getUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-    const userId = req.params.id;
+    const uid = req.params.uid; // Change id to uid
     try {
-        const user = await User.findById(userId);
+        const user = await User.findOne({ uid }); // Find user by UID
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -37,10 +37,10 @@ const getUserById = async (req, res) => {
 };
 
 const updateUserById = async (req, res) => {
-    const userId = req.params.id;
+    const uid = req.params.uid; // Change id to uid
     const updateData = req.body;
     try {
-        const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+        const updatedUser = await User.findOneAndUpdate({ uid }, updateData, { new: true }); // Find user by UID and update
         if (!updatedUser) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -52,9 +52,9 @@ const updateUserById = async (req, res) => {
 };
 
 const deleteUserById = async (req, res) => {
-    const userId = req.params.id;
+    const uid = req.params.uid; // Change id to uid
     try {
-        const deletedUser = await User.findByIdAndDelete(userId);
+        const deletedUser = await User.findOneAndDelete({ uid }); // Find user by UID and delete
         if (!deletedUser) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -64,6 +64,7 @@ const deleteUserById = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 const getUsersByQuery = async (req, res) => {
     const query = req.params.query;
