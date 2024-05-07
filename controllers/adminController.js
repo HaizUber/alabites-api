@@ -27,13 +27,14 @@ const getAdmins = async (req, res) => {
 
 const getAdminById = async (req, res) => {
     try {
-        const uid = req.params.id; // Change id to uid
-        const result = await Admin.findOne({ uid }); // Find admin by uid
+        const uid = req.params.uid; // Extract UID from request parameters
+        const result = await Admin.findOne({ uid: uid }); // Find admin by UID
         if (!result) {
             return res.status(404).json({ message: "Admin not found" });
         }
         res.status(200).json({ message: "Success", data: result });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Internal server error" });
     }
 }
