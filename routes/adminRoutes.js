@@ -14,9 +14,9 @@ router.use((req, res, next) => {
 router.post('/', createAdmin); // Route for creating a new admin
 router.get('/', getAdmins); // Route for fetching all admins
 router.get('/query/:query', getAdminByQuery); // Route for querying admins by UID, email, username, or role
-router.get('/:id', getAdminById); // Route for fetching an admin by ID
-router.put('/:id', updateAdminById); // Route for updating an admin by ID
-router.delete('/:id', deleteAdminById); // Route for deleting an admin by ID
+router.get('/:uid', getAdminById); // Route for fetching an admin by ID
+router.put('/:uid', updateAdminById); // Route for updating an admin by UID
+router.delete('/:uid', deleteAdminById); // Route for deleting an admin by ID
 
 
 module.exports = router;
