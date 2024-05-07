@@ -40,7 +40,7 @@ const adminSchema = new mongoose.Schema({
     },
     stores: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String, // Change type to String
             ref: 'Store'
         }
     ]

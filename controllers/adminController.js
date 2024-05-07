@@ -70,8 +70,6 @@ const updateAdminById = async (req, res) => {
     }
 };
 
-
-
 const deleteAdminById = async (req, res) => {
     try {
         const uid = req.params.uid; // Extract UID from request parameters
