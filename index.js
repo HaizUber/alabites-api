@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
 require('dotenv').config();
 require('./db');
@@ -10,12 +9,6 @@ const adminRoutes = require('./routes/adminRoutes'); // Import admin routes
 const storeRoutes = require('./routes/storeRoutes'); // Import store routes
 
 app.use(express.json());
-
-// Allow requests from localhost and alabites-ordering-app.vercel.app
-const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
-app.use(cors({
-  origin: allowedOrigins
-}));
 
 app.get('/', (req, res) => {
     res.send('alabites api running and ready to break ;-;');
