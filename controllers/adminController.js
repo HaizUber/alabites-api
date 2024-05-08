@@ -49,18 +49,11 @@ const updateAdminById = async (req, res) => {
             $set: { // Update admin details
                 firstName: body.firstName,
                 lastName: body.lastName,
-                email: body.email,
                 username: body.username,
                 avatar: body.avatar // Add avatar update
-            }
+            },
+            updatedAt: Date.now() // Update updatedAt field
         };
-        
-        // If storeId is provided in the request body, add the new store to stores array
-        if (body.storeId) {
-            updateDoc.$addToSet = { stores: body.storeId };
-        }
-
-        updateDoc.updatedAt = Date.now(); // Update updatedAt field
 
         // Find admin by UID and update
         const updatedAdmin = await Admin.findOneAndUpdate({ uid }, updateDoc, { new: true });
@@ -75,6 +68,7 @@ const updateAdminById = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 const deleteAdminById = async (req, res) => {
     try {
