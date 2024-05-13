@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
         enum: ['snack', 'breakfast', 'lunch', 'beverage'],
         required: true
     },
-    photoReference: { // New field to store the photo reference
+    productphoto: { // New field to store the photo reference
         type: String,
         required: false
     },
