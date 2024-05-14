@@ -84,7 +84,7 @@ const deleteById = async (req, res) => {
 const getProductByQuery = async (req, res) => {
     const query = req.params.query;
     try {
-        const result = await Product.findOne({
+        const result = await Product.find({
             $or: [
                 { pid: query },
                 { productName: query },
