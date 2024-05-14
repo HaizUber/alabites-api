@@ -4,15 +4,32 @@ const createProduct = async (req, res) => {
     const body = req.body;
     console.log('userInfo ', req.userInfo);
     try {
-        const product = new Product(body);
+        // Extract store ID from the request body or any other relevant source
+        const storeId = body.store;
+
+        // Check if the store ID is provided
+        if (!storeId) {
+            return res.status(400).json({ message: "Store ID is required" });
+        }
+
+        // Create a new product instance with the provided data
+        const product = new Product({
+            ...body,
+            store: storeId // Set the store field explicitly
+        });
+
+        // Save the product to the database
         const result = await product.save();
-        res.status(201)
-            .json({ message: "created", result });
+
+        // Respond with a success message and the created product
+        res.status(201).json({ message: "Product created successfully", result });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        // Handle any errors and respond with an error message
+        console.error('Error creating product:', err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 const getProducts = async (req, res) => {
     try {
