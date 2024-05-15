@@ -58,16 +58,39 @@ const updateProductById = async (req, res) => {
     try {
         const id = req.params.id;
         const body = req.body;
-        const updateDoc = { $set: { ...body } };
-        updateDoc.updatedAt = Date.now();
-        await Product.findByIdAndUpdate(id, updateDoc);
-        res.status(200)
-            .json({ message: "updated" });
+
+        // Check if the provided ID is valid
+        if (!id) {
+            return res.status(400).json({ message: "Product ID is required" });
+        }
+
+        // Find the product by ID
+        const product = await Product.findById(id);
+
+        // If the product doesn't exist, return an error
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        // Update the product fields with the data from the request body
+        product.name = body.name || product.name;
+        product.description = body.description || product.description;
+        product.price = body.price || product.price;
+        product.productphoto = body.productphoto || product.productphoto;
+        product.updatedAt = Date.now();
+
+        // Save the updated product to the database
+        await product.save();
+
+        // Respond with a success message
+        res.status(200).json({ message: "Product updated successfully" });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        // Handle any errors and respond with an error message
+        console.error('Error updating product:', err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 const deleteById = async (req, res) => {
     try {
