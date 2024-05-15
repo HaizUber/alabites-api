@@ -90,6 +90,7 @@ const getProductByQuery = async (req, res) => {
                 { productName: query },
                 { price: query },
                 { store: query },
+                { name: query },
                 { category: query }
             ]
         });
