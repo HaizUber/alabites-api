@@ -1,11 +1,32 @@
 const mongoose = require('mongoose');
 
+// Define a schema for transactions
+const transactionSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        enum: ['credit', 'debit'], // Type of transaction: credit or debit
+        required: true
+    },
+    amount: {
+        type: Number,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    description: {
+        type: String,
+        required: false
+    }
+});
+
 const userSchema = new mongoose.Schema({
     uid: {
         type: String,
         required: true
     },
-    firebaseUID: { // Add firebaseUID field
+    firebaseUID: {
         type: String,
         required: true
     },
@@ -14,11 +35,11 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     firstName: {
-        type: String, // Add firstName field
+        type: String,
         required: true
     },
     lastName: {
-        type: String, // Add lastName field
+        type: String,
         required: true
     },
     username: {
@@ -30,16 +51,22 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     studentavatar: {
-        type: String, // Store base64 photo link
-        required: false // Make it optional
+        type: String,
+        required: false
     },
+    currencyBalance: {
+        type: Number,
+        default: 0, // Initialize the balance to 0
+        required: true
+    },
+    transactionHistory: [transactionSchema], // Array of transaction documents
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     },
     updatedAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     }
 });
 

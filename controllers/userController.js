@@ -42,16 +42,15 @@ const updateUserById = async (req, res) => {
     try {
         // Construct update document
         const updateDoc = {
-            $set: { // Update user details
+            $set: {
                 firstName: updateData.firstName,
                 lastName: updateData.lastName,
                 email: updateData.email,
                 username: updateData.username,
-                avatar: updateData.avatar // Add avatar update
-            }
+                studentavatar: updateData.studentavatar // Correct field name
+            },
+            updatedAt: Date.now() // Update updatedAt field
         };
-
-        updateDoc.updatedAt = Date.now(); // Update updatedAt field
 
         // Find user by UID and update
         const updatedUser = await User.findOneAndUpdate({ uid }, updateDoc, { new: true });
@@ -59,14 +58,13 @@ const updateUserById = async (req, res) => {
         if (!updatedUser) {
             return res.status(404).json({ message: "User not found" });
         }
-        
+
         res.status(200).json({ message: "User updated", data: updatedUser });
     } catch (error) {
         console.error("Error updating user:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
-
 
 const deleteUserById = async (req, res) => {
     const uid = req.params.uid; // Change id to uid
@@ -81,7 +79,6 @@ const deleteUserById = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
-
 
 const getUsersByQuery = async (req, res) => {
     const query = req.params.query;
@@ -102,11 +99,47 @@ const getUsersByQuery = async (req, res) => {
     }
 };
 
+// Add currency to user
+const addCurrencyToUser = async (req, res) => {
+    const { uid, amount, description } = req.body;
+    try {
+        const user = await User.findOne({ uid });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        await user.addCurrency(amount, description);
+        res.status(200).json({ message: "Currency added", data: user });
+    } catch (error) {
+        console.error("Error adding currency:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+// Spend currency from user
+const spendCurrencyFromUser = async (req, res) => {
+    const { uid, amount, description } = req.body;
+    try {
+        const user = await User.findOne({ uid });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        await user.spendCurrency(amount, description);
+        res.status(200).json({ message: "Currency spent", data: user });
+    } catch (error) {
+        console.error("Error spending currency:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 module.exports = {
     createUser,
     getUsers,
     getUserById,
     getUsersByQuery,
     updateUserById,
-    deleteUserById
+    deleteUserById,
+    addCurrencyToUser,
+    spendCurrencyFromUser
 };
