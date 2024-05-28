@@ -76,7 +76,7 @@ const updateProductById = async (req, res) => {
         product.name = body.name || product.name;
         product.description = body.description || product.description;
         product.price = body.price || product.price;
-        product.productphoto = body.productphoto || product.productphoto;
+        product.productPhotos = body.productPhotos || product.productPhotos;
         product.updatedAt = Date.now();
 
         // Save the updated product to the database
