@@ -1,4 +1,4 @@
-const { createOrder, getOrders, getOrderByOrderNumber, updateOrderById, deleteOrderById, getOrderByQuery } = require('../controllers/orderController');
+const { createOrder, getOrders, getOrderByOrderNumber, updateOrderByOrderNumber, deleteOrderByOrderNumber, getOrderByQuery } = require('../controllers/orderController');
 const router = require('express').Router();
 
 // CORS middleware
@@ -12,10 +12,10 @@ router.use((req, res, next) => {
 
 // Define your order routes below
 router.post('/', createOrder); // Route for creating a new order
-router.get('/', getOrders); // Route for fetching all orders
-router.get('/query/:query', getOrderByQuery); // Route for querying orders by order number, customer name, email, or status
-router.get('/:orderNumber', getOrderByOrderNumber); // Route for fetching an order by order number
-router.put('/:id', updateOrderById); // Route for updating an order by ID
-router.delete('/:id', deleteOrderById); // Route for deleting an order by ID
+router.get('/orders', getOrders); // Route for fetching all orders
+router.get('/query/order/:query', getOrderByQuery); // Route for querying orders by order number, customer name, email, or status
+router.get('/order/:orderNumber', getOrderByOrderNumber); // Route for fetching an order by order number
+router.put('/order/:orderNumber', updateOrderByOrderNumber); // Route for updating an order by order number
+router.delete('/order/:orderNumber', deleteOrderByOrderNumber); // Route for deleting an order by order number
 
 module.exports = router;
