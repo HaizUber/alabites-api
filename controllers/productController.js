@@ -106,6 +106,7 @@ const deleteById = async (req, res) => {
 
 const getProductByQuery = async (req, res) => {
     const query = req.params.query;
+
     try {
         const result = await Product.find({
             $or: [
@@ -117,11 +118,17 @@ const getProductByQuery = async (req, res) => {
                 { category: query }
             ]
         });
-        if (!result) {
+
+        if (!result || result.length === 0) {
             return res.status(404).json({ message: "Product not found" });
         }
+
+        // Log the result for debugging purposes
+        console.log('Query Result:', result);
+
         res.status(200).json({ message: "Success", data: result });
     } catch (err) {
+        console.error('Error fetching product by query:', err);
         res.status(500).json({ message: "Internal server error" });
     }
 }
@@ -134,6 +141,11 @@ const updateProductStockById = async (req, res) => {
         // Check if the provided ID is valid
         if (!id) {
             return res.status(400).json({ message: "Product ID is required" });
+        }
+
+        // Check if stock is provided and is a valid number
+        if (stock === undefined || stock === null || typeof stock !== 'number' || stock < 0) {
+            return res.status(400).json({ message: "Valid stock value is required" });
         }
 
         // Find the product by ID
@@ -154,10 +166,15 @@ const updateProductStockById = async (req, res) => {
         res.status(200).json({ message: "Product stock updated successfully" });
     } catch (err) {
         // Handle any errors and respond with an error message
-        console.error('Error updating product stock:', err);
+        console.error('Error updating product stock:', {
+            error: err.message,
+            stack: err.stack,
+            productId: req.params.id
+        });
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 module.exports = {
     createProduct,

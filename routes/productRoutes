@@ -1,30 +1,71 @@
-const { createProduct,
-    getProducts,
-    getProductById,
-    updateProductById,
-    deleteById,
-  getProductByQuery,
-  updateProductStockById } = require('../controllers/productController');
-
-const router = require('express').Router();
+const { createProduct, getProducts, getProductById, updateProductById, deleteById, getProductByQuery, updateProductStockById } = require('../controllers/productController');
+const express = require('express');
+const router = express.Router();
+const helmet = require('helmet');
 
 // CORS middleware
+const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
 router.use((req, res, next) => {
-  // Allow requests from localhost:3000 and https://alabites-ordering-app.vercel.app
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 
+// Security middleware
+router.use(helmet());
 
 // Define your product routes below
-router.post('/', createProduct); // Route for creating a new product (secure)
-router.get('/', getProducts); // Route for fetching all products
-router.get('/query/:query', getProductByQuery); // Route for querying products by PID, productName, price, store, or category
-router.get('/:id', getProductById); // Route for fetching a product by ID
-router.put('/:id', updateProductById); // Route for updating a product by ID (secure)
-router.delete('/:id', deleteById); // Route for deleting a product by ID (secure)
-router.put('/:id', updateProductStockById); 
+/**
+ * @route POST /products
+ * @desc Create a new product
+ * @access Secure
+ */
+router.post('/', createProduct);
+
+/**
+ * @route GET /products
+ * @desc Get all products
+ * @access Public
+ */
+router.get('/', getProducts);
+
+/**
+ * @route GET /products/query/:query
+ * @desc Get products by query
+ * @access Public
+ */
+router.get('/query/:query', getProductByQuery);
+
+/**
+ * @route GET /products/:id
+ * @desc Get product by ID
+ * @access Public
+ */
+router.get('/:id', getProductById);
+
+/**
+ * @route PUT /products/:id
+ * @desc Update product by ID
+ * @access Secure
+ */
+router.put('/:id', updateProductById);
+
+/**
+ * @route DELETE /products/:id
+ * @desc Delete product by ID
+ * @access Secure
+ */
+router.delete('/:id', deleteById);
+
+/**
+ * @route PATCH /products/:id/stock
+ * @desc Update product stock by ID
+ * @access Secure
+ */
+router.patch('/:id/stock', updateProductStockById);
 
 module.exports = router;
