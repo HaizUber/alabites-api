@@ -126,11 +126,18 @@ const getProductByQuery = async (req, res) => {
     }
 }
 
-const updateStockByPid = async (req, res) => {
-    const { pid, quantity } = req.body;
+const updateProductStockById = async (req, res) => {
     try {
-        // Find the product by PID
-        const product = await Product.findOne({ pid });
+        const id = req.params.id;
+        const { stock } = req.body;
+
+        // Check if the provided ID is valid
+        if (!id) {
+            return res.status(400).json({ message: "Product ID is required" });
+        }
+
+        // Find the product by ID
+        const product = await Product.findById(id);
 
         // If the product doesn't exist, return an error
         if (!product) {
@@ -138,20 +145,19 @@ const updateStockByPid = async (req, res) => {
         }
 
         // Update the stock of the product
-        product.stock -= quantity;
+        product.stock = stock;
 
         // Save the updated product to the database
         await product.save();
 
         // Respond with a success message
-        res.status(200).json({ message: "Stock updated successfully" });
+        res.status(200).json({ message: "Product stock updated successfully" });
     } catch (err) {
         // Handle any errors and respond with an error message
-        console.error('Error updating stock:', err);
+        console.error('Error updating product stock:', err);
         res.status(500).json({ message: "Internal server error" });
     }
 }
-
 
 module.exports = {
     createProduct,
@@ -160,5 +166,6 @@ module.exports = {
     getProductByQuery,
     updateProductById,
     deleteById,
-    updateStockByPid // Add this line to export the new function
+    updateProductStockById // Add the new function here
 }
+
