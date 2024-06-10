@@ -3,7 +3,8 @@ const { createProduct,
     getProductById,
     updateProductById,
     deleteById,
-  getProductByQuery } = require('../controllers/productController');
+  getProductByQuery,
+  updateProductStockByPid } = require('../controllers/productController');
 
 const router = require('express').Router();
 

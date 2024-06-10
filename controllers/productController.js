@@ -126,11 +126,39 @@ const getProductByQuery = async (req, res) => {
     }
 }
 
+const updateStockByPid = async (req, res) => {
+    const { pid, quantity } = req.body;
+    try {
+        // Find the product by PID
+        const product = await Product.findOne({ pid });
+
+        // If the product doesn't exist, return an error
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        // Update the stock of the product
+        product.stock -= quantity;
+
+        // Save the updated product to the database
+        await product.save();
+
+        // Respond with a success message
+        res.status(200).json({ message: "Stock updated successfully" });
+    } catch (err) {
+        // Handle any errors and respond with an error message
+        console.error('Error updating stock:', err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
 module.exports = {
     createProduct,
     getProducts,
     getProductById,
     getProductByQuery,
     updateProductById,
-    deleteById
+    deleteById,
+    updateStockByPid // Add this line to export the new function
 }
