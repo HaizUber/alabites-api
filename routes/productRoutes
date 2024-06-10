@@ -4,7 +4,7 @@ const { createProduct,
     updateProductById,
     deleteById,
   getProductByQuery,
-  updateProductStockByPid } = require('../controllers/productController');
+  updateStockByPid } = require('../controllers/productController');
 
 const router = require('express').Router();
 
@@ -26,5 +26,6 @@ router.get('/:id', getProductById); // Route for fetching a product by ID
 router.put('/:id', updateProductById); // Route for updating a product by ID (secure)
 router.delete('/:id', deleteById); // Route for deleting a product by ID (secure)
 
+router.put('/stock/:pid', updateStockByPid);
 
 module.exports = router;

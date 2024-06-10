@@ -17,5 +17,4 @@ router.get('/query/order/:query', getOrderByQuery); // Route for querying orders
 router.get('/order/:orderNumber', getOrderByOrderNumber); // Route for fetching an order by order number
 router.put('/order/:orderNumber', updateOrderByOrderNumber); // Route for updating an order by order number
 router.delete('/order/:orderNumber', deleteOrderByOrderNumber); // Route for deleting an order by order number
-
 module.exports = router;
