@@ -11,7 +11,7 @@ const router = require('express').Router();
 router.use((req, res, next) => {
   // Allow requests from localhost:3000 and https://alabites-ordering-app.vercel.app
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
