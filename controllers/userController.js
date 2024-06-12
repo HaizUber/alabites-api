@@ -177,7 +177,6 @@ const generateOrderId = () => {
     return prefix + randomDigits;
 };
 
-
 module.exports = {
     createUser,
     getUsers,
@@ -189,5 +188,6 @@ module.exports = {
     spendCurrencyFromUser,
     addTransactionToUser  
 };
+
 
 
