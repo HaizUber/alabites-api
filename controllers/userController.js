@@ -150,6 +150,19 @@ const addTransactionToUser = async (req, res) => {
 
         console.error("User found:", user);
 
+        // Generate a unique orderId
+        const generateOrderId = () => {
+            const prefix = "3000";
+            const randomDigits = Math.floor(100000 + Math.random() * 900000); // Generate 6 random digits
+            return prefix + randomDigits;
+        };
+
+        const orderId = generateOrderId(); // Generate orderId
+        console.log("Generated Order ID:", orderId); // Log orderId
+
+        // Add the orderId to the transaction
+        transaction.orderId = orderId;
+
         // Add the transaction to the user's transaction history
         user.transactionHistory.push(transaction);
         user.updatedAt = Date.now();
