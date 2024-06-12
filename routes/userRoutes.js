@@ -13,12 +13,13 @@ const router = require('express').Router();
 
 // CORS middleware
 router.use((req, res, next) => {
-  // Allow requests from allowed origins
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // Allow requests from localhost:3000
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true); // Allow credentials (cookies, authorization headers, etc.)
   next();
 });
+
 
 // Define your user routes below
 router.post('/', createUser); // Route for creating a new user
