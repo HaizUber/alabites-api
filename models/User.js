@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const transactionSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ['credit', 'debit'],
+        enum: ['tamcredits', 'debit'],
         required: true
     },
     amount: {
