@@ -99,23 +99,6 @@ const getUsersByQuery = async (req, res) => {
     }
 };
 
-// Add currency to user
-const addCurrencyToUser = async (req, res) => {
-    const { uid, amount, description } = req.body;
-    try {
-        const user = await User.findOne({ uid });
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        await user.addCurrency(amount, description);
-        res.status(200).json({ message: "Currency added", data: user });
-    } catch (error) {
-        console.error("Error adding currency:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-};
-
 // Spend currency from user
 const spendCurrencyFromUser = async (req, res) => {
     const { uid, amount, description } = req.body;
@@ -184,7 +167,6 @@ module.exports = {
     getUsersByQuery,
     updateUserById,
     deleteUserById,
-    addCurrencyToUser,
     spendCurrencyFromUser,
     addTransactionToUser  
 };

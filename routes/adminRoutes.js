@@ -1,4 +1,4 @@
-const { createAdmin, getAdmins, getAdminById, updateAdminById, deleteAdminById, getAdminByQuery } = require('../controllers/adminController');
+const { createAdmin, getAdmins, getAdminById, updateAdminById, deleteAdminById, getAdminByQuery, addCurrencyToUser } = require('../controllers/adminController');
 const router = require('express').Router();
 
 // CORS middleware
@@ -17,6 +17,7 @@ router.get('/query/:query', getAdminByQuery); // Route for querying admins by UI
 router.get('/:uid', getAdminById); // Route for fetching an admin by ID
 router.put('/:uid', updateAdminById); // Route for updating an admin by UID
 router.delete('/:uid', deleteAdminById); // Route for deleting an admin by ID
+router.post('/:uid/add-currency', addCurrencyToUser); // Route for adding currency to a user
 
 
 module.exports = router;
