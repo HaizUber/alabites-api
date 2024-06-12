@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const transactionSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ['credit', 'debit'], // Type of transaction: credit or debit
+        enum: ['credit', 'debit'],
         required: true
     },
     amount: {
@@ -12,9 +12,8 @@ const transactionSchema = new mongoose.Schema({
         required: true
     },
     orderId: {
-        type: String, // Adding orderId field
-        required: true,
-        unique: true // Ensure orderId is unique
+        type: String,
+        required: true
     },
     date: {
         type: Date,
@@ -25,6 +24,7 @@ const transactionSchema = new mongoose.Schema({
         required: false
     }
 });
+
 
 const userSchema = new mongoose.Schema({
     uid: {
