@@ -137,18 +137,25 @@ const addTransactionToUser = async (req, res) => {
     const uid = req.params.uid;
     const { transaction } = req.body;
 
+    console.error("Received request to add transaction:", transaction);
+    console.error("User UID:", uid);
+
     try {
         const user = await User.findOne({ uid });
 
         if (!user) {
+            console.error("User not found for UID:", uid);
             return res.status(404).json({ message: "User not found" });
         }
+
+        console.error("User found:", user);
 
         // Add the transaction to the user's transaction history
         user.transactionHistory.push(transaction);
         user.updatedAt = Date.now();
 
         const updatedUser = await user.save();
+        console.error("Transaction added, updated user:", updatedUser);
 
         res.status(200).json({ message: "Transaction added", data: updatedUser });
     } catch (error) {
@@ -166,6 +173,7 @@ module.exports = {
     deleteUserById,
     addCurrencyToUser,
     spendCurrencyFromUser,
-    addTransactionToUser  // Add this line
+    addTransactionToUser  
 };
+
 
