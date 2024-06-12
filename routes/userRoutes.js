@@ -6,18 +6,18 @@ const {
   deleteUserById, 
   getUsersByQuery, 
   addCurrencyToUser, 
-  spendCurrencyFromUser ,
+  spendCurrencyFromUser,
   addTransactionToUser
 } = require('../controllers/userController');
 const router = require('express').Router();
 
 // CORS middleware
 router.use((req, res, next) => {
-// Allow requests from allowed origins
-res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-next();
+  // Allow requests from allowed origins
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
 });
 
 // Define your user routes below
@@ -31,6 +31,6 @@ router.delete('/:uid', deleteUserById); // Route for deleting a user by UID
 // New routes for currency operations
 router.post('/:uid/add-currency', addCurrencyToUser); // Route for adding currency to a user
 router.post('/:uid/spend-currency', spendCurrencyFromUser); // Route for spending currency from a user
-router.put('/:uid/transaction', addTransactionToUser); // Route for adding a transaction to user's history
+router.post('/:uid/transaction', addTransactionToUser); // Route for adding a transaction to user's history
 
 module.exports = router;
