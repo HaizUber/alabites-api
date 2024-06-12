@@ -1,24 +1,78 @@
 const { createAdmin, getAdmins, getAdminById, updateAdminById, deleteAdminById, getAdminByQuery, addCurrencyToUser } = require('../controllers/adminController');
-const router = require('express').Router();
+const express = require('express');
+const router = express.Router();
+const helmet = require('helmet');
 
 // CORS middleware
+const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
 router.use((req, res, next) => {
-  // Allow requests from allowed origins
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Credentials', true);
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
   next();
 });
 
-// Define your admin routes below
-router.post('/', createAdmin); // Route for creating a new admin
-router.get('/', getAdmins); // Route for fetching all admins
-router.get('/query/:query', getAdminByQuery); // Route for querying admins by UID, email, username, or role
-router.get('/:uid', getAdminById); // Route for fetching an admin by ID
-router.put('/:uid', updateAdminById); // Route for updating an admin by UID
-router.delete('/:uid', deleteAdminById); // Route for deleting an admin by ID
-router.post('/:uid/add-currency', addCurrencyToUser); // Route for adding currency to a user
+// Security middleware
+router.use(helmet());
 
+// Define your admin routes below
+/**
+ * @route POST /admins
+ * @desc Create a new admin
+ * @access Secure
+ */
+router.post('/', createAdmin);
+
+/**
+ * @route GET /admins
+ * @desc Get all admins
+ * @access Public
+ */
+router.get('/', getAdmins);
+
+/**
+ * @route GET /admins/query/:query
+ * @desc Get admins by query
+ * @access Public
+ */
+router.get('/query/:query', getAdminByQuery);
+
+/**
+ * @route GET /admins/:uid
+ * @desc Get admin by UID
+ * @access Public
+ */
+router.get('/:uid', getAdminById);
+
+/**
+ * @route PUT /admins/:uid
+ * @desc Update admin by UID
+ * @access Secure
+ */
+router.put('/:uid', updateAdminById);
+
+/**
+ * @route DELETE /admins/:uid
+ * @desc Delete admin by UID
+ * @access Secure
+ */
+router.delete('/:uid', deleteAdminById);
+
+/**
+ * @route POST /admins/:uid/add-currency
+ * @desc Add currency to a user
+ * @access Secure
+ */
+router.post('/:uid/add-currency', addCurrencyToUser);
 
 module.exports = router;
