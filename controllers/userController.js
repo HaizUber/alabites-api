@@ -133,6 +133,30 @@ const spendCurrencyFromUser = async (req, res) => {
     }
 };
 
+const addTransactionToUser = async (req, res) => {
+    const uid = req.params.uid;
+    const { transaction } = req.body;
+
+    try {
+        const user = await User.findOne({ uid });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Add the transaction to the user's transaction history
+        user.transactionHistory.push(transaction);
+        user.updatedAt = Date.now();
+
+        const updatedUser = await user.save();
+
+        res.status(200).json({ message: "Transaction added", data: updatedUser });
+    } catch (error) {
+        console.error("Error adding transaction:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 module.exports = {
     createUser,
     getUsers,
@@ -141,5 +165,7 @@ module.exports = {
     updateUserById,
     deleteUserById,
     addCurrencyToUser,
-    spendCurrencyFromUser
+    spendCurrencyFromUser,
+    addTransactionToUser  // Add this line
 };
+

@@ -6,7 +6,8 @@ const {
   deleteUserById, 
   getUsersByQuery, 
   addCurrencyToUser, 
-  spendCurrencyFromUser 
+  spendCurrencyFromUser ,
+  addTransactionToUser
 } = require('../controllers/userController');
 const router = require('express').Router();
 
@@ -30,5 +31,6 @@ router.delete('/:uid', deleteUserById); // Route for deleting a user by UID
 // New routes for currency operations
 router.post('/:uid/add-currency', addCurrencyToUser); // Route for adding currency to a user
 router.post('/:uid/spend-currency', spendCurrencyFromUser); // Route for spending currency from a user
+router.put('/:uid/transaction', addTransactionToUser); // Route for adding a transaction to user's history
 
 module.exports = router;
