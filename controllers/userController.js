@@ -150,12 +150,6 @@ const addTransactionToUser = async (req, res) => {
 
         console.error("User found:", user);
 
-        // Generate a unique order ID (3000 + 6 random digits)
-        const orderId = generateOrderId();
-
-        // Add the order ID to the transaction
-        transaction.orderId = orderId;
-
         // Add the transaction to the user's transaction history
         user.transactionHistory.push(transaction);
         user.updatedAt = Date.now();
@@ -170,13 +164,6 @@ const addTransactionToUser = async (req, res) => {
     }
 };
 
-// Function to generate a unique order ID
-const generateOrderId = () => {
-    const prefix = "3000";
-    const randomDigits = Math.floor(100000 + Math.random() * 900000); // Generate 6 random digits
-    return prefix + randomDigits;
-};
-
 module.exports = {
     createUser,
     getUsers,
@@ -188,6 +175,7 @@ module.exports = {
     spendCurrencyFromUser,
     addTransactionToUser  
 };
+
 
 
 
