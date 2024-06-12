@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 // Define a schema for transactions
 const transactionSchema = new mongoose.Schema({
+    orderId: {
+        type: String,
+        required: true
+    },
     type: {
         type: String,
         enum: ['credit', 'debit'], // Type of transaction: credit or debit
