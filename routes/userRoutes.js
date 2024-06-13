@@ -1,35 +1,94 @@
-const { 
-  createUser, 
-  getUsers, 
-  getUserById, 
-  updateUserById, 
-  deleteUserById, 
-  getUsersByQuery, 
+const express = require('express');
+const router = express.Router();
+const helmet = require('helmet');
+const {
+  createUser,
+  getUsers,
+  getUserById,
+  updateUserById,
+  deleteUserById,
+  getUsersByQuery,
   spendCurrencyFromUser,
   addTransactionToUser
 } = require('../controllers/userController');
-const router = require('express').Router();
 
 // CORS middleware
+const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
 router.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // Allow requests from localhost:3000
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Access-Control-Allow-Credentials', true); // Allow credentials (cookies, authorization headers, etc.)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
   next();
 });
 
+// Security middleware
+router.use(helmet());
 
 // Define your user routes below
-router.post('/', createUser); // Route for creating a new user
-router.get('/', getUsers); // Route for fetching all users
-router.get('/query/:query', getUsersByQuery); // Route for querying users by field
-router.get('/:uid', getUserById); // Route for fetching a user by UID
-router.put('/:uid', updateUserById); // Route for updating a user by UID
-router.delete('/:uid', deleteUserById); // Route for deleting a user by UID
+/**
+ * @route POST /users
+ * @desc Create a new user
+ * @access Secure
+ */
+router.post('/', createUser);
 
-// New routes for currency operations
-router.post('/:uid/spend-currency', spendCurrencyFromUser); // Route for spending currency from a user
-router.post('/:uid/transaction', addTransactionToUser); // Route for adding a transaction to user's history
+/**
+ * @route GET /users
+ * @desc Get all users
+ * @access Public
+ */
+router.get('/', getUsers);
+
+/**
+ * @route GET /users/query/:query
+ * @desc Get users by query
+ * @access Public
+ */
+router.get('/query/:query', getUsersByQuery);
+
+/**
+ * @route GET /users/:uid
+ * @desc Get user by UID
+ * @access Public
+ */
+router.get('/:uid', getUserById);
+
+/**
+ * @route PUT /users/:uid
+ * @desc Update user by UID
+ * @access Secure
+ */
+router.put('/:uid', updateUserById);
+
+/**
+ * @route DELETE /users/:uid
+ * @desc Delete user by UID
+ * @access Secure
+ */
+router.delete('/:uid', deleteUserById);
+
+/**
+ * @route PATCH /users/:uid/spend-currency
+ * @desc Spend currency from a user
+ * @access Secure
+ */
+router.patch('/:uid/spend-currency', spendCurrencyFromUser);
+
+/**
+ * @route POST /users/:uid/transaction
+ * @desc Add a transaction to user's history
+ * @access Secure
+ */
+router.post('/:uid/transaction', addTransactionToUser);
 
 module.exports = router;
