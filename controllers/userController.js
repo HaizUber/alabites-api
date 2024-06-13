@@ -101,32 +101,29 @@ const getUsersByQuery = async (req, res) => {
 
 // Spend currency from user
 const spendCurrencyFromUser = async (req, res) => {
-    const { uid, amount, description } = req.body;
-    console.log(`Request received to spend currency: uid=${uid}, amount=${amount}, description=${description}`);
-    
     try {
-        const user = await User.findOne({ uid });
-        if (!user) {
-            console.log(`User not found for uid=${uid}`);
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        console.log(`User found: ${user}`);
-
-        // Log the user's current balance before spending
-        console.log(`User's current balance: ${user.balance}`);
-
-        await user.spendCurrency(amount, description);
-
-        // Log the user's new balance after spending
-        console.log(`User's new balance: ${user.balance}`);
-
-        res.status(200).json({ message: "Currency spent", data: user });
+      const { uid } = req.params;
+      const { amount } = req.body;
+  
+      // Find the user by uid
+      const user = await User.findOne({ uid });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Deduct the amount from the user's balance
+      if (user.currencyBalance < amount) {
+        return res.status(400).json({ message: 'Insufficient balance' });
+      }
+  
+      user.currencyBalance -= amount;
+      await user.save();
+  
+      res.status(200).json({ message: 'Currency spent successfully', newBalance: user.currencyBalance });
     } catch (error) {
-        console.error("Error spending currency:", error);
-        res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: 'Error spending currency', error });
     }
-};
+  };
 
 
 const addTransactionToUser = async (req, res) => {
