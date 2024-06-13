@@ -1,7 +1,7 @@
-const { createAdmin, getAdmins, getAdminById, updateAdminById, deleteAdminById, getAdminByQuery, addCurrencyToUser } = require('../controllers/adminController');
 const express = require('express');
 const router = express.Router();
 const helmet = require('helmet');
+const { createAdmin, getAdmins, getAdminById, updateAdminById, deleteAdminById, getAdminByQuery, addCurrencyToUser } = require('../controllers/adminController');
 
 // CORS middleware
 const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
@@ -11,7 +11,7 @@ router.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Credentials', true);
   
   // Handle preflight requests
