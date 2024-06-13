@@ -112,7 +112,7 @@ const addCurrencyToUser = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        await user.addCurrency(amount, description); // Ensure this method exists on the User model
+        await user.addCurrency(amount, description); // Using the new addCurrency method
         res.status(200).json({ message: "Currency added", data: user });
     } catch (error) {
         console.error("Error adding currency:", error);

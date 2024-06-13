@@ -25,7 +25,6 @@ const transactionSchema = new mongoose.Schema({
     }
 });
 
-
 const userSchema = new mongoose.Schema({
     uid: {
         type: String,
@@ -70,5 +69,24 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
+// Method to add currency and log the transaction
+userSchema.methods.addCurrency = async function(amount, description) {
+    this.currencyBalance += amount;
+
+    // Create a new transaction
+    const transaction = {
+        type: 'tamcredits',
+        amount: amount,
+        orderId: new mongoose.Types.ObjectId().toString(), // Generating a new ObjectId for the orderId
+        description: description
+    };
+
+    // Add the transaction to the history
+    this.transactionHistory.push(transaction);
+
+    // Save the user document
+    await this.save();
+};
 
 module.exports = mongoose.model('User', userSchema);
