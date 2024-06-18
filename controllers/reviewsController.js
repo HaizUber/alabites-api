@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 // Function to create a new review
 const createReview = async (req, res) => {
     try {
-        const { userId, productId, rating, reviewText } = req.body;
+        const { userId, rating, reviewText } = req.body;
+        const productId = req.params.productId; // Get productId from route params
 
         if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(productId)) {
             return res.status(400).json({ error: 'Invalid userId or productId' });
