@@ -12,29 +12,24 @@ const adminRoutes = require('./routes/adminRoutes');
 const storeRoutes = require('./routes/storeRoutes');
 const reviewRoutes = require('./routes/reviewsRoutes');
 
-// CORS configuration
+// CORS Configuration
 const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
 
-// Security middleware
+// Security Middleware
 app.use(helmet());
 
-// Body parser middleware
+// Body Parser Middleware
 app.use(express.json());
 
+// Routes
 app.get('/', (req, res) => {
-    res.send('alabites api running and ready to break ;-;');
+    res.send('Alabites API is running!');
 });
 
 app.get('/ping', (req, res) => {
@@ -48,7 +43,7 @@ app.use('/admins', adminRoutes);
 app.use('/store', storeRoutes);
 app.use('/reviews', reviewRoutes);
 
-// Error handling middleware
+// Error Handling Middleware
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     res.status(401).json({ message: 'Invalid token' });
@@ -60,5 +55,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log('Server is listening on PORT: ' + PORT);
+    console.log(`Server is listening on PORT: ${PORT}`);
 });

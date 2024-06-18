@@ -15,7 +15,11 @@ const reviewSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 1,
-        max: 5
+        max: 5,
+        validate: {
+            validator: Number.isInteger,
+            message: '{VALUE} is not an integer value for rating'
+        }
     },
     reviewText: {
         type: String,
@@ -27,4 +31,4 @@ const reviewSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Reviews', reviewSchema);
+module.exports = mongoose.model('Review', reviewSchema);
