@@ -24,13 +24,13 @@ router.use(helmet());
  * @desc Create a new review for a specific product
  * @access Public (can be adjusted based on your authentication needs)
  */
-router.post('/:productId/reviews', createReview);
+router.post('/:pid/reviews', createReview);
 
 /**
  * @route GET /reviews/product/:productId
  * @desc Get all reviews for a product
  * @access Public
  */
-router.get('/product/:productId', getReviewsByProduct);
+router.get('/product/:pid', getReviewsByProduct);
 
 module.exports = router;
