@@ -20,11 +20,11 @@ router.use(helmet());
 
 // Define your review routes below
 /**
- * @route POST /reviews
- * @desc Create a new review
+ * @route POST /products/:productId/reviews
+ * @desc Create a new review for a specific product
  * @access Public (can be adjusted based on your authentication needs)
  */
-router.post('/', createReview);
+router.post('/:productId/reviews', createReview);
 
 /**
  * @route GET /reviews/product/:productId
