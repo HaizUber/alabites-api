@@ -3,7 +3,7 @@ const router = express.Router();
 const cors = require('cors');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
-const Review = require('../models/review'); // Correct path to review model file
+const Review = require('../models/Review'); // Correct path to review model file
 const Product = mongoose.model('Product');
 
 // Define allowed origins
