@@ -1,11 +1,15 @@
-const Review = require('../models/Review'); // Assuming Review model is defined in models/Review.js
+const mongoose = require('mongoose');
+const Review = require('../models/Review');
 
 // Function to create a new review
 exports.createReview = async (req, res) => {
     try {
         const { userId, productId, rating, reviewText } = req.body;
 
-        // Create new review instance
+        if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(400).json({ error: 'Invalid userId or productId' });
+        }
+
         const newReview = new Review({
             userId,
             productId,
@@ -13,10 +17,8 @@ exports.createReview = async (req, res) => {
             reviewText
         });
 
-        // Save the review to the database
         const savedReview = await newReview.save();
-
-        res.status(201).json(savedReview); // Respond with the saved review
+        res.status(201).json(savedReview);
     } catch (error) {
         console.error('Error adding review:', error);
         res.status(500).json({ error: 'Server Error' });
@@ -27,9 +29,14 @@ exports.createReview = async (req, res) => {
 exports.getReviewsByProduct = async (req, res) => {
     try {
         const { productId } = req.params;
+        console.log('Fetching reviews for productId:', productId);
 
-        // Fetch reviews from the database based on productId
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            return res.status(400).json({ error: 'Invalid productId' });
+        }
+
         const reviews = await Review.find({ productId });
+        console.log('Reviews found:', reviews);
 
         if (reviews.length === 0) {
             return res.status(404).json({ message: 'No reviews found for this product.' });
