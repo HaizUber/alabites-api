@@ -1,17 +1,14 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
-require('./db');
 const cors = require('cors');
 const helmet = require('helmet');
 const PORT = process.env.PORT || 8080;
-const productRoutes = require('./routes/productRoutes');
-const userRoutes = require('./routes/userRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const storeRoutes = require('./routes/storeRoutes');
+require('dotenv').config();
+require('./db'); // Assuming this file sets up your database connection
 
 // CORS Configuration
 const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
+
 app.use(cors({
   origin: allowedOrigins,
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE', 'PATCH'],
@@ -35,10 +32,17 @@ app.get('/ping', (req, res) => {
 });
 
 // Mount routes
+const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const storeRoutes = require('./routes/storeRoutes');
+const reviewRoutes = require('./routes/reviewRoutes'); // Import review routes
+
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
 app.use('/admins', adminRoutes);
 app.use('/store', storeRoutes);
+app.use('/reviews', reviewRoutes); // Mount review routes
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
