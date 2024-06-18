@@ -7,13 +7,13 @@ const { createReview, getReviewsByProduct } = require('../controllers/reviewCont
  * @desc Create a new review
  * @access Public (can be adjusted based on your authentication needs)
  */
-router.post('/', createReview);
+router.post('/reviews', createReview);
 
 /**
  * @route GET /reviews/product/:productId
  * @desc Get all reviews for a product
  * @access Public
  */
-router.get('/product/:productId', getReviewsByProduct);
+router.get('/reviews/product/:productId', getReviewsByProduct);
 
 module.exports = router;
