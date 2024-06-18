@@ -9,7 +9,6 @@ const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const storeRoutes = require('./routes/storeRoutes');
-const reviewRoutes = require('./routes/reviewsRoutes');
 
 // CORS Configuration
 const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
@@ -40,7 +39,6 @@ app.use('/products', productRoutes);
 app.use('/users', userRoutes);
 app.use('/admins', adminRoutes);
 app.use('/store', storeRoutes);
-app.use('/reviews', reviewRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
