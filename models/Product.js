@@ -21,34 +21,38 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    productPhotos: { // Array to store multiple photo URLs
+    productPhotos: {
         type: [String],
         required: false
     },
-    stock: { // Field for stock management
+    stock: {
         type: Number,
         required: true,
         default: 0
     },
-    tags: { // Field for product tags
+    tags: {
         type: [String],
         required: false
     },
-    discount: { // Field for discounts
+    discount: {
         type: Number,
         required: false,
         default: 0
     },
-    averageRating: { // Field for average rating
+    averageRating: {
         type: Number,
         required: false,
         default: 0
     },
-    numberOfReviews: { // Field for the number of reviews
+    numberOfReviews: {
         type: Number,
         required: false,
         default: 0
     },
+    reviews: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review'
+    }],
     createdAt: {
         type: Date,
         default: Date.now
