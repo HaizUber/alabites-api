@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const Review = mongoose.model('Review');
-const Product = mongoose.model('Product');
+const Review = require('../models/Review');
+const Product = require('../models/Product');
 
 // Create a new review
-exports.createReview = async (req, res) => {
+const createReview = async (req, res) => {
     const { user, product, rating, comment } = req.body;
 
     try {
@@ -30,26 +30,26 @@ exports.createReview = async (req, res) => {
 
         res.status(201).json(review);
     } catch (err) {
-        console.error(err);
+        console.error('Error creating review:', err);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Get reviews for a specific product
-exports.getReviewsByProduct = async (req, res) => {
+const getReviewsByProduct = async (req, res) => {
     const productId = req.params.productId;
 
     try {
         const reviews = await Review.find({ product: productId }).populate('user', 'username');
         res.json(reviews);
     } catch (err) {
-        console.error(err);
+        console.error('Error fetching reviews by product:', err);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Get a review by ID
-exports.getReviewById = async (req, res) => {
+const getReviewById = async (req, res) => {
     const reviewId = req.params.reviewId;
 
     try {
@@ -59,13 +59,13 @@ exports.getReviewById = async (req, res) => {
         }
         res.json(review);
     } catch (err) {
-        console.error(err);
+        console.error('Error fetching review by ID:', err);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Update a review by ID
-exports.updateReviewById = async (req, res) => {
+const updateReviewById = async (req, res) => {
     const reviewId = req.params.reviewId;
     const { rating, comment } = req.body;
 
@@ -85,13 +85,13 @@ exports.updateReviewById = async (req, res) => {
 
         res.json(updatedReview);
     } catch (err) {
-        console.error(err);
+        console.error('Error updating review:', err);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Delete a review by ID
-exports.deleteReviewById = async (req, res) => {
+const deleteReviewById = async (req, res) => {
     const reviewId = req.params.reviewId;
 
     try {
@@ -115,7 +115,15 @@ exports.deleteReviewById = async (req, res) => {
 
         res.json({ message: 'Review deleted successfully' });
     } catch (err) {
-        console.error(err);
+        console.error('Error deleting review:', err);
         res.status(500).json({ message: 'Server error' });
     }
+};
+
+module.exports = {
+    createReview,
+    getReviewsByProduct,
+    getReviewById,
+    updateReviewById,
+    deleteReviewById
 };

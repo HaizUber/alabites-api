@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const helmet = require('helmet');
-const mongoose = require('mongoose');
-const Review = require('../models/Review'); // Correct path to review model file
-const Product = mongoose.model('Product');
+const { createReview, getReviewsByProduct, getReviewById, updateReviewById, deleteReviewById } = require('../controllers/reviewController');
+const Product = require('../models/Product'); // Correct path to Product model
 
 // Define allowed origins
 const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
@@ -31,15 +30,6 @@ router.use(helmet());
 // Middleware to handle errors
 const asyncHandler = fn => (req, res, next) =>
     Promise.resolve(fn(req, res, next)).catch(next);
-
-// Import Review Controller
-const {
-    createReview,
-    getReviewsByProduct,
-    getReviewById,
-    updateReviewById,
-    deleteReviewById
-} = require('../controllers/reviewController');
 
 /**
  * @route POST /reviews
