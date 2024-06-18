@@ -39,19 +39,30 @@ app.get('/ping', (req, res) => {
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
 app.use('/admins', adminRoutes);
-app.use('/store', storeRoutes);
+app.use('/store', storeRoutes); // Mount storeRoutes here
 app.use('/reviews', reviewRoutes);
+
+// List available routes
+const listRoutes = (router) => {
+  router.stack.forEach((layer) => {
+    if (layer.route) {
+      console.log(`${Object.keys(layer.route.methods).join(', ')} -> ${layer.route.path}`);
+    }
+  });
+};
+
+console.log('List of available routes:');
+listRoutes(app);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   if (err.name === 'UnauthorizedError') {
-    res.status(401).json({ message: 'Invalid token' });
+    return res.status(401).json({ message: 'Invalid token' });
   } else if (err.name === 'ValidationError') {
-    res.status(400).json({ message: err.message });
-  } else {
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(400).json({ message: err.message });
   }
+  res.status(500).json({ message: 'Internal server error' });
 });
 
 // Default error handler
