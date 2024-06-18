@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const helmet = require('helmet');
-const { createReview, getReviewsByProduct } = require('../controllers/reviewsController'); // Import controller functions
+const { createReview } = require('../controllers/reviewsController'); // Import controller functions
 
 // CORS middleware
 const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
@@ -25,12 +25,5 @@ router.use(helmet());
  * @access Public (can be adjusted based on your authentication needs)
  */
 router.post('/:productId/reviews', createReview);
-
-/**
- * @route GET /reviews/product/:productId
- * @desc Get all reviews for a product
- * @access Public
- */
-router.get('/product/:productId', getReviewsByProduct);
 
 module.exports = router;
