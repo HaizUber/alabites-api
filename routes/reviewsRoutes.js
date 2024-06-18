@@ -1,19 +1,9 @@
+// Backend routes
 const express = require('express');
 const router = express.Router();
 const { createReview, getReviewsByProduct } = require('../controllers/reviewsController');
 
-/**
- * @route POST /reviews
- * @desc Create a new review
- * @access Public (can be adjusted based on your authentication needs)
- */
-router.post('/reviews', createReview);
-
-/**
- * @route GET /reviews/product/:productId
- * @desc Get all reviews for a product
- * @access Public
- */
+router.post('/reviews/:productId', createReview); // Updated endpoint
 router.get('/reviews/product/:productId', getReviewsByProduct);
 
 module.exports = router;
