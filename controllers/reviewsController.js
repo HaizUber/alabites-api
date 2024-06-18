@@ -39,28 +39,6 @@ const createReview = async (req, res) => {
     }
 };
 
-// Function to get all reviews for a product
-const getReviewsByProduct = async (req, res) => {
-    try {
-        const { productId } = req.params;
-
-        if (!mongoose.Types.ObjectId.isValid(productId)) {
-            return res.status(400).json({ error: 'Invalid productId' });
-        }
-
-        // Ensure the product exists before fetching reviews
-        const product = await Product.findById(productId).populate('reviews');
-        if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
-        }
-
-        res.status(200).json({ reviews: product.reviews, ...product._doc });
-    } catch (error) {
-        console.error('Error fetching reviews:', error);
-        res.status(500).json({ error: 'Server Error' });
-    }
-};
-
 // Helper function to calculate average rating
 const calculateAverageRating = (product) => {
     if (product.reviews.length === 0) return 0;
@@ -70,6 +48,5 @@ const calculateAverageRating = (product) => {
 };
 
 module.exports = {
-    createReview,
-    getReviewsByProduct
+    createReview
 };
