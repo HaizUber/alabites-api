@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const reviewSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'User', // Reference to the User model
         required: true
     },
     productId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
+        ref: 'Product', // Reference to the Product model
         required: true
     },
     rating: {
@@ -29,6 +29,12 @@ const reviewSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+});
+
+// Middleware to populate userId and productId fields with corresponding documents
+reviewSchema.pre('find', function(next) {
+    this.populate('userId').populate('productId');
+    next();
 });
 
 module.exports = mongoose.model('Review', reviewSchema);

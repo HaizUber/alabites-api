@@ -4,7 +4,6 @@ require('dotenv').config();
 require('./db');
 const cors = require('cors');
 const helmet = require('helmet');
-
 const PORT = process.env.PORT || 8080;
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -45,6 +44,7 @@ app.use('/reviews', reviewRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
+  console.error(err.stack);
   if (err.name === 'UnauthorizedError') {
     res.status(401).json({ message: 'Invalid token' });
   } else if (err.name === 'ValidationError') {
@@ -52,6 +52,12 @@ app.use((err, req, res, next) => {
   } else {
     res.status(500).json({ message: 'Internal server error' });
   }
+});
+
+// Default error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong' });
 });
 
 app.listen(PORT, () => {

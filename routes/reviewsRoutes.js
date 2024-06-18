@@ -1,19 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const helmet = require('helmet');
-const { createReview, getReviewsByProduct } = require('../controllers/reviewsController'); // Import controller functions
+const cors = require('cors');
+const { createReview, getReviewsByProduct } = require('../controllers/reviewsController');
 
 // CORS middleware
 const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
-router.use((req, res, next) => {
-    const origin = req.headers.origin;
+router.use(cors({
+  origin: function (origin, callback) {
     if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
+  },
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type']
+}));
 
 // Security middleware
 router.use(helmet());
@@ -24,13 +27,13 @@ router.use(helmet());
  * @desc Create a new review for a specific product
  * @access Public (can be adjusted based on your authentication needs)
  */
-router.post('/:pid/reviews', createReview);
+router.post('/products/:productId/reviews', createReview);
 
 /**
- * @route GET /reviews/product/:productId
+ * @route GET /products/:productId/reviews
  * @desc Get all reviews for a product
  * @access Public
  */
-router.get('/product/:pid', getReviewsByProduct);
+router.get('/products/:productId/reviews', getReviewsByProduct);
 
 module.exports = router;

@@ -5,9 +5,9 @@ const mongoose = require('mongoose');
 // Function to create a new review
 const createReview = async (req, res) => {
     try {
-        const { userId, productId, rating, reviewText } = req.body;
+        const { userId, productId, rating, reviewText } = req.body; // Changed to productId
 
-        // Validate user and product IDs
+        // Validate user ID and product ID
         if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(productId)) {
             return res.status(400).json({ error: 'Invalid userId or productId' });
         }
@@ -21,7 +21,7 @@ const createReview = async (req, res) => {
         // Create new review
         const newReview = new Review({
             userId,
-            productId,
+            productId, // Using productId here
             rating,
             reviewText
         });
@@ -47,35 +47,13 @@ const createReview = async (req, res) => {
 const calculateAverageRating = (product) => {
     if (product.reviews.length === 0) return 0;
 
-    const totalRating = product.reviews.reduce((acc, review) => acc + review.rating, 0);
+    const totalRating = product.reviews.reduce((acc, reviewId) => {
+        const review = product.reviews.find(review => review._id === reviewId);
+        return acc + review.rating;
+    }, 0);
     return totalRating / product.reviews.length;
-};
-
-// Function to get all reviews for a product
-const getReviewsByProduct = async (req, res) => {
-    try {
-        const { productId } = req.params;
-
-        // Validate product ID
-        if (!mongoose.Types.ObjectId.isValid(productId)) {
-            return res.status(400).json({ error: 'Invalid productId' });
-        }
-
-        // Find product and populate reviews
-        const product = await Product.findById(productId).populate('reviews');
-        if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
-        }
-
-        // Respond with reviews
-        res.status(200).json({ reviews: product.reviews, ...product._doc });
-    } catch (error) {
-        console.error('Error fetching reviews:', error);
-        res.status(500).json({ error: 'Server Error' });
-    }
 };
 
 module.exports = {
     createReview,
-    getReviewsByProduct
 };
