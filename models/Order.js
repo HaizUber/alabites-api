@@ -6,22 +6,24 @@ const orderSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    orderDetails: {
-        type: String,
-        required: true
-    },
-    customerName: {
-        type: String,
-        required: true
-    },
-    customerEmail: {
-        type: String,
-        required: true
+    customer: {
+        name: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        }
     },
     items: [{
         productId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Product',
+            required: true
+        },
+        name: {
+            type: String,
             required: true
         },
         quantity: {
@@ -33,6 +35,20 @@ const orderSchema = new mongoose.Schema({
             required: true
         }
     }],
+    paymentDetails: {
+        method: {
+            type: String,
+            required: true
+        },
+        transactionId: {
+            type: String,
+            required: true
+        },
+        amount: {
+            type: Number,
+            required: true
+        }
+    },
     totalAmount: {
         type: Number,
         required: true

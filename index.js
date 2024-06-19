@@ -58,12 +58,6 @@ app.use((err, req, res, next) => {
   }
 });
 
-// Default error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong' });
-});
-
 app.listen(PORT, () => {
     console.log(`Server is listening on PORT: ${PORT}`);
 });

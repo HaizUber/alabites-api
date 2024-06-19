@@ -1,20 +1,64 @@
-const { createOrder, getOrders, getOrderByOrderNumber, updateOrderByOrderNumber, deleteOrderByOrderNumber, getOrderByQuery } = require('../controllers/orderController');
-const router = require('express').Router();
+const { createOrder, getOrders, getOrderById, updateOrderById, deleteOrderById, updateOrderStatusById } = require('../controllers/orderController');
+const express = require('express');
+const router = express.Router();
+const helmet = require('helmet');
 
 // CORS middleware
+const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
 router.use((req, res, next) => {
-  // Allow requests from allowed origins
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 
+// Security middleware
+router.use(helmet());
+
 // Define your order routes below
-router.post('/', createOrder); // Route for creating a new order
-router.get('/orders', getOrders); // Route for fetching all orders
-router.get('/query/order/:query', getOrderByQuery); // Route for querying orders by order number, customer name, email, or status
-router.get('/order/:orderNumber', getOrderByOrderNumber); // Route for fetching an order by order number
-router.put('/order/:orderNumber', updateOrderByOrderNumber); // Route for updating an order by order number
-router.delete('/order/:orderNumber', deleteOrderByOrderNumber); // Route for deleting an order by order number
+/**
+ * @route POST /orders
+ * @desc Create a new order
+ * @access Secure
+ */
+router.post('/', createOrder);
+
+/**
+ * @route GET /orders
+ * @desc Get all orders
+ * @access Public
+ */
+router.get('/', getOrders);
+
+/**
+ * @route GET /orders/:id
+ * @desc Get order by ID
+ * @access Public
+ */
+router.get('/:id', getOrderById);
+
+/**
+ * @route PUT /orders/:id
+ * @desc Update order by ID
+ * @access Secure
+ */
+router.put('/:id', updateOrderById);
+
+/**
+ * @route DELETE /orders/:id
+ * @desc Delete order by ID
+ * @access Secure
+ */
+router.delete('/:id', deleteOrderById);
+
+/**
+ * @route PATCH /orders/:id/status
+ * @desc Update order status by ID
+ * @access Secure
+ */
+router.patch('/:id/status', updateOrderStatusById);
+
 module.exports = router;
