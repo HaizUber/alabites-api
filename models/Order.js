@@ -33,6 +33,10 @@ const orderSchema = new mongoose.Schema({
         price: {
             type: Number,
             required: true
+        },
+        store: {
+            type: String,
+            required: true
         }
     }],
     paymentDetails: {
@@ -59,7 +63,7 @@ const orderSchema = new mongoose.Schema({
         default: 'Pending'
     },
     store: {
-        type: String, // Assuming store identifier is a string
+        type: String,
         required: true
     },
     createdAt: {
