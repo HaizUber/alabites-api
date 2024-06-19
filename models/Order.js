@@ -58,6 +58,10 @@ const orderSchema = new mongoose.Schema({
         required: true,
         default: 'Pending'
     },
+    store: {
+        type: String, // Assuming store identifier is a string
+        required: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
