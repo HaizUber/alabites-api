@@ -37,12 +37,14 @@ const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const storeRoutes = require('./routes/storeRoutes');
 const reviewRoutes = require('./routes/reviewRoutes'); // Import review routes
+const orderRoutes = require('./routes/orderRoutes');
 
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
 app.use('/admins', adminRoutes);
 app.use('/store', storeRoutes);
 app.use('/reviews', reviewRoutes); // Mount review routes
+app.use('/orders', orderRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
