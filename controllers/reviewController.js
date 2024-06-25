@@ -93,8 +93,6 @@ const deleteReviewById = async (req, res) => {
 
 module.exports = {
     createReview,
-    getReviewsByProduct,
-    getReviewById,
     updateReviewById,
     deleteReviewById
 };
