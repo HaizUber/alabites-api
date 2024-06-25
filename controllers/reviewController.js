@@ -23,15 +23,9 @@ const createReview = async (req, res) => {
 
         await review.save();
 
-        // Update product's reviews
+        // Update product's reviews and calculate average rating
         existingProduct.reviews.push(review._id);
-        await existingProduct.save(); // Save product with updated reviews
-
-        // Calculate average rating for the product
-        const reviews = await Review.find({ product: existingProduct._id });
-        const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-        existingProduct.averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
-        await existingProduct.save(); // Save product with updated average rating
+        await existingProduct.calculateAverageRating();
 
         res.status(201).json(review);
     } catch (err) {
@@ -54,10 +48,7 @@ const updateReviewById = async (req, res) => {
         // Update associated product's average rating
         const product = await Product.findById(updatedReview.product);
         if (product) {
-            const reviews = await Review.find({ product: product._id });
-            const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-            product.averageRating = totalRating / reviews.length;
-            await product.save();
+            await product.calculateAverageRating();
         }
 
         res.json(updatedReview);

@@ -44,6 +44,10 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Review'
     }],
+    averageRating: {
+        type: Number,
+        default: 0
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -56,5 +60,25 @@ const productSchema = new mongoose.Schema({
     toJSON: { virtuals: true },
     id: false,
 });
+
+// Middleware to update 'updatedAt' field on document update
+productSchema.pre('findOneAndUpdate', function(next) {
+    this.set({ updatedAt: new Date() });
+    next();
+});
+
+// Method to calculate and update average rating
+productSchema.methods.calculateAverageRating = async function() {
+    const reviews = await Review.find({ product: this._id });
+
+    if (reviews.length === 0) {
+        this.averageRating = 0;
+    } else {
+        const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+        this.averageRating = totalRating / reviews.length;
+    }
+
+    await this.save();
+};
 
 module.exports = mongoose.model('Product', productSchema);
