@@ -66,20 +66,29 @@ productSchema.virtual('averageRatingValue').get(function() {
     return total / this.reviews.length;
 });
 
+// Middleware to update 'updatedAt' field on document update
+productSchema.pre('findOneAndUpdate', function(next) {
+    this.set({ updatedAt: new Date() });
+    next();
+});
+
 // Middleware to update average rating and number of reviews
-productSchema.post('save', async function(doc) {
+productSchema.post('save', async function() {
     const Review = mongoose.model('Review');
+    const productId = this._id;
 
-    // Calculate average rating
-    const reviews = await Review.find({ product: doc._id });
-    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-    const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+    try {
+        const reviews = await Review.find({ product: productId });
+        const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+        const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
 
-    // Update product document
-    await this.model('Product').findByIdAndUpdate(doc._id, {
-        averageRating,
-        numberOfReviews: reviews.length
-    });
+        await this.model('Product').findByIdAndUpdate(productId, {
+            averageRating: averageRating,
+            numberOfReviews: reviews.length
+        });
+    } catch (err) {
+        console.error('Error updating product average rating:', err);
+    }
 });
 
 module.exports = mongoose.model('Product', productSchema);

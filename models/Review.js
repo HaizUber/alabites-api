@@ -9,7 +9,8 @@ const reviewSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
-        required: true
+        required: true,
+        index: true // Adding index for faster queries on product reviews
     },
     rating: {
         type: Number,
@@ -24,7 +25,16 @@ const reviewSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    updatedAt: {
+        type: Date
     }
+});
+
+// Middleware to update the 'updatedAt' field on document save
+reviewSchema.pre('save', function(next) {
+    this.updatedAt = Date.now();
+    next();
 });
 
 module.exports = mongoose.model('Review', reviewSchema);

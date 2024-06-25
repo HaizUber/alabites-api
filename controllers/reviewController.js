@@ -25,7 +25,11 @@ const createReview = async (req, res) => {
 
         // Update product's average rating and number of reviews
         existingProduct.numberOfReviews += 1;
-        existingProduct.averageRating = (existingProduct.averageRating * (existingProduct.numberOfReviews - 1) + rating) / existingProduct.numberOfReviews;
+        existingProduct.reviews.push(review._id);
+        const totalRating = existingProduct.reviews.reduce((acc, reviewId) => {
+            return acc + (reviewId.equals(review._id) ? rating : (await Review.findById(reviewId)).rating);
+        }, 0);
+        existingProduct.averageRating = totalRating / existingProduct.numberOfReviews;
         await existingProduct.save();
 
         res.status(201).json(review);
@@ -78,8 +82,9 @@ const updateReviewById = async (req, res) => {
         // If the rating is updated, update product's average rating
         const product = await Product.findById(updatedReview.product);
         if (product) {
-            const oldRating = updatedReview.rating;
-            product.averageRating = (product.averageRating * product.numberOfReviews - oldRating + rating) / product.numberOfReviews;
+            const reviews = await Review.find({ product: product._id });
+            const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+            product.averageRating = totalRating / reviews.length;
             await product.save();
         }
 
@@ -103,12 +108,14 @@ const deleteReviewById = async (req, res) => {
         // Update product's average rating and number of reviews
         const product = await Product.findById(deletedReview.product);
         if (product) {
-            product.numberOfReviews -= 1;
+            product.reviews = product.reviews.filter(rId => !rId.equals(deletedReview._id));
+            product.numberOfReviews = product.reviews.length;
             if (product.numberOfReviews === 0) {
                 product.averageRating = 0;
             } else {
-                const oldRating = deletedReview.rating;
-                product.averageRating = (product.averageRating * (product.numberOfReviews + 1) - oldRating) / product.numberOfReviews;
+                const reviews = await Review.find({ product: product._id });
+                const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+                product.averageRating = totalRating / product.numberOfReviews;
             }
             await product.save();
         }

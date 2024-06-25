@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const Review = require('../models/Review');
 
 const createProduct = async (req, res) => {
     const body = req.body;
@@ -30,15 +31,13 @@ const createProduct = async (req, res) => {
     }
 }
 
-
 const getProducts = async (req, res) => {
     try {
         const results = await Product.find({});
-        res.status(200)
-            .json({ message: "success", data: results });
+        res.status(200).json({ message: "Success", data: results });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        console.error('Error fetching products:', err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -46,11 +45,13 @@ const getProductById = async (req, res) => {
     try {
         const id = req.params.id;
         const result = await Product.findById(id);
-        res.status(200)
-            .json({ message: "success", data: result });
+        if (!result) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json({ message: "Success", data: result });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        console.error('Error fetching product by ID:', err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -91,16 +92,14 @@ const updateProductById = async (req, res) => {
     }
 }
 
-
 const deleteById = async (req, res) => {
     try {
         const id = req.params.id;
         await Product.findByIdAndDelete(id);
-        res.status(200)
-            .json({ message: "deleted" });
+        res.status(200).json({ message: "Product deleted successfully" });
     } catch (err) {
-        res.status(500)
-            .json({ message: "Internal server error" });
+        console.error('Error deleting product:', err);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -111,20 +110,16 @@ const getProductByQuery = async (req, res) => {
         const result = await Product.find({
             $or: [
                 { pid: query },
-                { productName: query },
+                { name: { $regex: query, $options: 'i' } }, // Case-insensitive search for product name
                 { price: query },
                 { store: query },
-                { name: query },
-                { category: query }
+                { tags: { $in: [query] } } // Search in tags array
             ]
         });
 
         if (!result || result.length === 0) {
             return res.status(404).json({ message: "Product not found" });
         }
-
-        // Log the result for debugging purposes
-        console.log('Query Result:', result);
 
         res.status(200).json({ message: "Success", data: result });
     } catch (err) {
@@ -166,15 +161,10 @@ const updateProductStockById = async (req, res) => {
         res.status(200).json({ message: "Product stock updated successfully" });
     } catch (err) {
         // Handle any errors and respond with an error message
-        console.error('Error updating product stock:', {
-            error: err.message,
-            stack: err.stack,
-            productId: req.params.id
-        });
+        console.error('Error updating product stock:', err);
         res.status(500).json({ message: "Internal server error" });
     }
 }
-
 
 module.exports = {
     createProduct,
@@ -183,6 +173,5 @@ module.exports = {
     getProductByQuery,
     updateProductById,
     deleteById,
-    updateProductStockById // Add the new function here
+    updateProductStockById
 }
-
