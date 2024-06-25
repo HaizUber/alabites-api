@@ -26,10 +26,15 @@ const createReview = async (req, res) => {
         // Update product's average rating and number of reviews
         existingProduct.numberOfReviews += 1;
         existingProduct.reviews.push(review._id);
-        const totalRating = existingProduct.reviews.reduce((acc, reviewId) => {
-            return acc + (reviewId.equals(review._id) ? rating : (await Review.findById(reviewId)).rating);
-        }, 0);
+
+        // Calculate new average rating for the product
+        let totalRating = 0;
+        for (const reviewId of existingProduct.reviews) {
+            const reviewObj = await Review.findById(reviewId);
+            totalRating += reviewObj.rating;
+        }
         existingProduct.averageRating = totalRating / existingProduct.numberOfReviews;
+
         await existingProduct.save();
 
         res.status(201).json(review);
@@ -38,6 +43,7 @@ const createReview = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 // Get reviews for a specific product
 const getReviewsByProduct = async (req, res) => {
