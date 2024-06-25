@@ -23,42 +23,19 @@ const createReview = async (req, res) => {
 
         await review.save();
 
-        // Update product's reviews and calculate average rating
+        // Update product's reviews
         existingProduct.reviews.push(review._id);
-        await existingProduct.calculateAverageRating();
+        await existingProduct.save(); // Save product with updated reviews
+
+        // Calculate average rating for the product
+        const reviews = await Review.find({ product: existingProduct._id });
+        const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+        existingProduct.averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+        await existingProduct.save(); // Save product with updated average rating
 
         res.status(201).json(review);
     } catch (err) {
         console.error('Error creating review:', err);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-
-// Get reviews for a specific product
-const getReviewsByProduct = async (req, res) => {
-    const productId = req.params.productId;
-
-    try {
-        const reviews = await Review.find({ product: productId }).populate('user', 'username');
-        res.json(reviews);
-    } catch (err) {
-        console.error('Error fetching reviews by product:', err);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-
-// Get a review by ID
-const getReviewById = async (req, res) => {
-    const reviewId = req.params.reviewId;
-
-    try {
-        const review = await Review.findById(reviewId).populate('user', 'username');
-        if (!review) {
-            return res.status(404).json({ message: 'Review not found' });
-        }
-        res.json(review);
-    } catch (err) {
-        console.error('Error fetching review by ID:', err);
         res.status(500).json({ message: 'Server error' });
     }
 };

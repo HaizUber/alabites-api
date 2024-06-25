@@ -1,22 +1,20 @@
 const Product = require('../models/Product');
-const Review = require('../models/Review');
 
+// Create a new product
 const createProduct = async (req, res) => {
-    const body = req.body;
+    const { store, ...body } = req.body; // Extract store ID and other fields from req.body
     console.log('userInfo ', req.userInfo);
-    try {
-        // Extract store ID from the request body or any other relevant source
-        const storeId = body.store;
 
+    try {
         // Check if the store ID is provided
-        if (!storeId) {
+        if (!store) {
             return res.status(400).json({ message: "Store ID is required" });
         }
 
         // Create a new product instance with the provided data
         const product = new Product({
             ...body,
-            store: storeId // Set the store field explicitly
+            store // Set the store field explicitly
         });
 
         // Save the product to the database
@@ -29,8 +27,9 @@ const createProduct = async (req, res) => {
         console.error('Error creating product:', err);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
+// Get all products
 const getProducts = async (req, res) => {
     try {
         const results = await Product.find({});
@@ -39,11 +38,13 @@ const getProducts = async (req, res) => {
         console.error('Error fetching products:', err);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
+// Get a product by ID
 const getProductById = async (req, res) => {
+    const id = req.params.id;
+
     try {
-        const id = req.params.id;
         const result = await Product.findById(id);
         if (!result) {
             return res.status(404).json({ message: "Product not found" });
@@ -53,13 +54,14 @@ const getProductById = async (req, res) => {
         console.error('Error fetching product by ID:', err);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
+// Update a product by ID
 const updateProductById = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const body = req.body;
+    const id = req.params.id;
+    const body = req.body;
 
+    try {
         // Check if the provided ID is valid
         if (!id) {
             return res.status(400).json({ message: "Product ID is required" });
@@ -74,11 +76,10 @@ const updateProductById = async (req, res) => {
         }
 
         // Update the product fields with the data from the request body
-        product.name = body.name || product.name;
-        product.description = body.description || product.description;
-        product.price = body.price || product.price;
-        product.productPhotos = body.productPhotos || product.productPhotos;
-        product.updatedAt = Date.now();
+        product.set({
+            ...body,
+            updatedAt: Date.now() // Update the updatedAt field
+        });
 
         // Save the updated product to the database
         await product.save();
@@ -90,19 +91,22 @@ const updateProductById = async (req, res) => {
         console.error('Error updating product:', err);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
+// Delete a product by ID
 const deleteById = async (req, res) => {
+    const id = req.params.id;
+
     try {
-        const id = req.params.id;
         await Product.findByIdAndDelete(id);
         res.status(200).json({ message: "Product deleted successfully" });
     } catch (err) {
         console.error('Error deleting product:', err);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
+// Get products by a query (pid, name, price, store, tags)
 const getProductByQuery = async (req, res) => {
     const query = req.params.query;
 
@@ -126,13 +130,14 @@ const getProductByQuery = async (req, res) => {
         console.error('Error fetching product by query:', err);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
+// Update product stock by ID
 const updateProductStockById = async (req, res) => {
-    try {
-        const id = req.params.id;
-        const { stock } = req.body;
+    const id = req.params.id;
+    const { stock } = req.body;
 
+    try {
         // Check if the provided ID is valid
         if (!id) {
             return res.status(400).json({ message: "Product ID is required" });
@@ -164,7 +169,7 @@ const updateProductStockById = async (req, res) => {
         console.error('Error updating product stock:', err);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 module.exports = {
     createProduct,
@@ -174,4 +179,4 @@ module.exports = {
     updateProductById,
     deleteById,
     updateProductStockById
-}
+};

@@ -57,31 +57,4 @@ const productSchema = new mongoose.Schema({
     id: false,
 });
 
-// Virtual field to calculate and store average rating
-productSchema.virtual('averageRatingValue').get(function() {
-    if (this.reviews.length === 0) {
-        return 0;
-    }
-
-    const total = this.reviews.reduce((acc, review) => acc + review.rating, 0);
-    return total / this.reviews.length;
-});
-
-// Middleware to update 'updatedAt' field on document update
-productSchema.pre('findOneAndUpdate', function(next) {
-    this.set({ updatedAt: new Date() });
-    next();
-});
-
-// Middleware to update average rating and number of reviews
-productSchema.post('save', async function() {
-    await this.calculateAverageRating();
-});
-
-productSchema.methods.calculateAverageRating = async function() {
-    const totalRating = this.reviews.reduce((acc, review) => acc + review.rating, 0);
-    this.averageRating = this.reviews.length > 0 ? totalRating / this.reviews.length : 0;
-    await this.save();
-};
-
 module.exports = mongoose.model('Product', productSchema);
