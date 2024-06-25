@@ -34,6 +34,35 @@ const createReview = async (req, res) => {
     }
 };
 
+// Get all reviews for a specific product
+const getReviewsByProduct = async (req, res) => {
+    const productId = req.params.productId;
+
+    try {
+        const reviews = await Review.find({ product: productId }).populate('user', 'username');
+        res.json(reviews);
+    } catch (err) {
+        console.error('Error fetching reviews by product:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Get a review by ID
+const getReviewById = async (req, res) => {
+    const reviewId = req.params.reviewId;
+
+    try {
+        const review = await Review.findById(reviewId).populate('user', 'username');
+        if (!review) {
+            return res.status(404).json({ message: 'Review not found' });
+        }
+        res.json(review);
+    } catch (err) {
+        console.error('Error fetching review by ID:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
 // Update a review by ID
 const updateReviewById = async (req, res) => {
     const reviewId = req.params.reviewId;
@@ -84,6 +113,8 @@ const deleteReviewById = async (req, res) => {
 
 module.exports = {
     createReview,
+    getReviewsByProduct,
+    getReviewById,
     updateReviewById,
     deleteReviewById
 };
