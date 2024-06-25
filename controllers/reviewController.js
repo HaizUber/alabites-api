@@ -23,19 +23,9 @@ const createReview = async (req, res) => {
 
         await review.save();
 
-        // Update product's average rating and number of reviews
-        existingProduct.numberOfReviews += 1;
+        // Update product's reviews and calculate average rating
         existingProduct.reviews.push(review._id);
-
-        // Calculate new average rating for the product
-        let totalRating = 0;
-        for (const reviewId of existingProduct.reviews) {
-            const reviewObj = await Review.findById(reviewId);
-            totalRating += reviewObj.rating;
-        }
-        existingProduct.averageRating = totalRating / existingProduct.numberOfReviews;
-
-        await existingProduct.save();
+        await existingProduct.calculateAverageRating();
 
         res.status(201).json(review);
     } catch (err) {
@@ -43,7 +33,6 @@ const createReview = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
-
 
 // Get reviews for a specific product
 const getReviewsByProduct = async (req, res) => {
@@ -85,7 +74,7 @@ const updateReviewById = async (req, res) => {
             return res.status(404).json({ message: 'Review not found' });
         }
 
-        // If the rating is updated, update product's average rating
+        // Update associated product's average rating
         const product = await Product.findById(updatedReview.product);
         if (product) {
             const reviews = await Review.find({ product: product._id });
@@ -111,19 +100,11 @@ const deleteReviewById = async (req, res) => {
             return res.status(404).json({ message: 'Review not found' });
         }
 
-        // Update product's average rating and number of reviews
+        // Update associated product's reviews and average rating
         const product = await Product.findById(deletedReview.product);
         if (product) {
             product.reviews = product.reviews.filter(rId => !rId.equals(deletedReview._id));
-            product.numberOfReviews = product.reviews.length;
-            if (product.numberOfReviews === 0) {
-                product.averageRating = 0;
-            } else {
-                const reviews = await Review.find({ product: product._id });
-                const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-                product.averageRating = totalRating / product.numberOfReviews;
-            }
-            await product.save();
+            await product.calculateAverageRating();
         }
 
         res.json({ message: 'Review deleted successfully' });

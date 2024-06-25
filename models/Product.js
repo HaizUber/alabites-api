@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Review = require('./review'); // Assuming your review model is defined in 'review.js'
 
 const productSchema = new mongoose.Schema({
     pid: {
@@ -74,21 +75,13 @@ productSchema.pre('findOneAndUpdate', function(next) {
 
 // Middleware to update average rating and number of reviews
 productSchema.post('save', async function() {
-    const Review = mongoose.model('Review');
-    const productId = this._id;
-
-    try {
-        const reviews = await Review.find({ product: productId });
-        const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-        const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
-
-        await this.model('Product').findByIdAndUpdate(productId, {
-            averageRating: averageRating,
-            numberOfReviews: reviews.length
-        });
-    } catch (err) {
-        console.error('Error updating product average rating:', err);
-    }
+    await this.calculateAverageRating();
 });
+
+productSchema.methods.calculateAverageRating = async function() {
+    const totalRating = this.reviews.reduce((acc, review) => acc + review.rating, 0);
+    this.averageRating = this.reviews.length > 0 ? totalRating / this.reviews.length : 0;
+    await this.save();
+};
 
 module.exports = mongoose.model('Product', productSchema);
