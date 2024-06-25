@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Review = require('./review'); // Assuming your review model is defined in 'review.js'
+const Review = require('./Review'); // Assuming your review model is defined in 'review.js'
 
 const productSchema = new mongoose.Schema({
     pid: {
