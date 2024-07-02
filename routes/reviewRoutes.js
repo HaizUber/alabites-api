@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 const helmet = require('helmet');
-const { createReview, getReviewsByProduct, getReviewById, updateReviewById, deleteReviewById } = require('../controllers/reviewController');
+const { createReview, getReviewsByProduct, getReviewById, updateReviewById, deleteReviewById, getReviewsByStoreProducts } = require('../controllers/reviewController');
 const Product = require('../models/Product'); // Correct path to Product model
 
 // Define allowed origins
@@ -65,5 +65,12 @@ router.put('/:reviewId', asyncHandler(updateReviewById));
  * @access Secure
  */
 router.delete('/:reviewId', asyncHandler(deleteReviewById));
+
+/**
+ * @route GET /reviews/store/:storeId
+ * @desc Get reviews for products owned by the store
+ * @access Public
+ */
+router.get('/store/:storeId', asyncHandler(getReviewsByStoreProducts)); // New endpoint
 
 module.exports = router;

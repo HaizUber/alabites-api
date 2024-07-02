@@ -111,9 +111,32 @@ const deleteReviewById = async (req, res) => {
     }
 };
 
+// Get reviews by products owned by the store
+const getReviewsByStoreProducts = async (req, res) => {
+    const storeId = req.params.storeId;
+
+    try {
+        // Find all products belonging to the store
+        const storeProducts = await Product.find({ store: storeId });
+
+        // Extract product IDs
+        const productIds = storeProducts.map(product => product._id);
+
+        // Find reviews for these products
+        const reviews = await Review.find({ product: { $in: productIds } }).populate('user', 'username');
+        
+        res.json(reviews);
+    } catch (err) {
+        console.error('Error fetching reviews by store products:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
 module.exports = {
     createReview,
     getReviewsByProduct,
+    getReviewsByStoreProducts,
     getReviewById,
     updateReviewById,
     deleteReviewById
