@@ -48,7 +48,8 @@ const updateAdminById = async (req, res) => {
                 firstName: body.firstName,
                 lastName: body.lastName,
                 username: body.username,
-                avatar: body.avatar
+                avatar: body.avatar,
+                aboutMe: body.aboutMe
             },
             updatedAt: Date.now()
         };
