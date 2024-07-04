@@ -138,7 +138,10 @@ const updateAboutMe = async (req, res) => {
             return res.status(404).json({ message: "Admin not found" });
         }
 
-        res.status(200).json({ message: "About me section updated successfully", data: updatedAdmin });
+        // Ensure 'aboutMe' is included in the returned data
+        const { _id, ...adminData } = updatedAdmin.toObject(); // Exclude _id from response if not needed
+
+        res.status(200).json({ message: "About me section updated successfully", data: { ...adminData, aboutMe } });
     } catch (err) {
         console.error('Error updating about me section:', err);
         res.status(500).json({ message: "Internal server error" });

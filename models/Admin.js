@@ -36,8 +36,9 @@ const adminSchema = new mongoose.Schema({
     },
     aboutMe: {
         type: String,
-        required: false
+        default: "" 
     },
+    
     createdAt: {
         type: Date,
         default: Date.now
