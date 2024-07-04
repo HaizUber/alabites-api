@@ -34,6 +34,10 @@ const adminSchema = new mongoose.Schema({
         type: String, // Store base64 photo link
         required: false // Make it optional
     },
+    aboutMe: {
+        type: String,
+        required: false
+    },
     createdAt: {
         type: Date,
         default: Date.now

@@ -120,6 +120,32 @@ const addCurrencyToUser = async (req, res) => {
     }
 };
 
+const updateAboutMe = async (req, res) => {
+    try {
+        const uid = req.params.uid;
+        const { aboutMe } = req.body;
+
+        const updateDoc = {
+            $set: {
+                aboutMe,
+                updatedAt: Date.now()
+            }
+        };
+
+        const updatedAdmin = await Admin.findOneAndUpdate({ uid }, updateDoc, { new: true });
+
+        if (!updatedAdmin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        res.status(200).json({ message: "About me section updated successfully", data: updatedAdmin });
+    } catch (err) {
+        console.error('Error updating about me section:', err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
 module.exports = {
     createAdmin,
     getAdmins,
@@ -127,5 +153,6 @@ module.exports = {
     getAdminByQuery,
     updateAdminById,
     deleteAdminById,
-    addCurrencyToUser
+    addCurrencyToUser,
+    updateAboutMe,
 };

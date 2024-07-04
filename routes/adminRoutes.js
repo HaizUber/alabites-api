@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const helmet = require('helmet');
-const { createAdmin, getAdmins, getAdminById, updateAdminById, deleteAdminById, getAdminByQuery, addCurrencyToUser } = require('../controllers/adminController');
+const { createAdmin, getAdmins, getAdminById, updateAdminById, deleteAdminById, getAdminByQuery, addCurrencyToUser, updateAboutMe } = require('../controllers/adminController');
 
 // CORS middleware
 const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
@@ -74,5 +74,13 @@ router.delete('/:uid', deleteAdminById);
  * @access Secure
  */
 router.post('/:uid/add-currency', addCurrencyToUser);
+
+/**
+ * @route PUT /admins/:uid/update-about-me
+ * @desc Update about me section of an admin
+ * @access Secure
+ */
+router.put('/:uid/update-about-me', updateAboutMe);
+
 
 module.exports = router;
