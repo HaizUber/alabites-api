@@ -1,4 +1,4 @@
-const { createProduct, getProducts, getProductById, updateProductById, deleteById, getProductByQuery, updateProductStockById } = require('../controllers/productController');
+const { createProduct, getProducts, getProductById, updateProductById, deleteById, getProductByQuery, updateProductStockById, deleteProductPhotoByIndex } = require('../controllers/productController');
 const express = require('express');
 const router = express.Router();
 const helmet = require('helmet');
@@ -67,5 +67,12 @@ router.delete('/:id', deleteById);
  * @access Secure
  */
 router.patch('/:id/stock', updateProductStockById);
+
+/**
+ * @route DELETE /products/:id/photo/:photoIndex
+ * @desc Delete a product photo by index
+ * @access Secure
+ */
+router.delete('/:id/photo/:photoIndex', deleteProductPhotoByIndex);
 
 module.exports = router;

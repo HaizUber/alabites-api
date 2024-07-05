@@ -171,6 +171,29 @@ const updateProductStockById = async (req, res) => {
     }
 };
 
+const deleteProductPhotoByIndex = async (req, res) => {
+    const { id, photoIndex } = req.params;
+
+    try {
+        const product = await Product.findById(id);
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        const deleted = await product.deletePhotoByIndex(photoIndex);
+
+        if (deleted) {
+            return res.status(200).json({ message: `Product photo at index ${photoIndex} deleted successfully` });
+        } else {
+            return res.status(404).json({ message: `Product photo at index ${photoIndex} not found` });
+        }
+    } catch (error) {
+        console.error('Error deleting product photo:', error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 module.exports = {
     createProduct,
     getProducts,
@@ -178,5 +201,6 @@ module.exports = {
     getProductByQuery,
     updateProductById,
     deleteById,
-    updateProductStockById
+    updateProductStockById,
+    deleteProductPhotoByIndex
 };

@@ -81,4 +81,17 @@ productSchema.methods.calculateAverageRating = async function() {
     await this.save();
 };
 
+productSchema.methods.deletePhotoByIndex = async function(index) {
+    try {
+        if (index >= 0 && index < this.productPhotos.length) {
+            this.productPhotos.splice(index, 1);
+            await this.save();
+            return true;
+        }
+        return false;
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = mongoose.model('Product', productSchema);
