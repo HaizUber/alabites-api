@@ -76,7 +76,7 @@ The **Alabites API** is the backend service for the Alabites ecommerce platform.
 
 ## License
 
-This project is licensed under the [MIT License](https://mit-license.org/) - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [MIT License](https://mit-license.org/)
 
 ## Contact
 
