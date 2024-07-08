@@ -73,6 +73,9 @@ const orderSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
+    },
+    completedAt: {
+        type: Date
     }
 });
 
