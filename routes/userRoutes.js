@@ -13,7 +13,7 @@ const {
 } = require('../controllers/userController');
 
 // CORS middleware
-const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
+const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app', 'https://alabites-admin-platform.vercel.app'];
 router.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {

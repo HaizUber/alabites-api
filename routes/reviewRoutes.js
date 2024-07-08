@@ -6,7 +6,7 @@ const { createReview, getReviewsByProduct, getReviewById, updateReviewById, dele
 const Product = require('../models/Product'); // Correct path to Product model
 
 // Define allowed origins
-const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
+const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app', 'https://alabites-admin-platform.vercel.app'];
 
 // CORS middleware configuration
 const corsOptions = {
