@@ -2,24 +2,24 @@ const { createProduct, getProducts, getProductById, updateProductById, deleteByI
 const express = require('express');
 const router = express.Router();
 const helmet = require('helmet');
+const cors = require('cors');
 
-// CORS middleware
+// Define allowed origins
 const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app', 'https://alabites-admin-platform.vercel.app'];
-router.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true'); // Add this line if you're using cookies or authorization headers
-  }
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
+
+// CORS middleware configuration
+router.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,POST,OPTIONS,PUT,DELETE,PATCH',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true
+}));
 
 // Security middleware
 router.use(helmet());

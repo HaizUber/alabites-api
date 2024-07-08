@@ -7,10 +7,17 @@ require('dotenv').config();
 require('./db'); // Assuming this file sets up your database connection
 
 // CORS Configuration
-const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app', 'https://alabites-admin-platform.vercel.app/'];
+const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app', 'https://alabites-admin-platform.vercel.app'];
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log(`Blocked by CORS: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -22,13 +29,19 @@ app.use(helmet());
 // Body Parser Middleware
 app.use(express.json());
 
+// Logging Middleware for debugging
+app.use((req, res, next) => {
+  console.log(`${req.method} request for ${req.url}`);
+  next();
+});
+
 // Routes
 app.get('/', (req, res) => {
-    res.send('Alabites API is running!');
+  res.send('Alabites API is running!');
 });
 
 app.get('/ping', (req, res) => {
-    res.send('PONG');
+  res.send('PONG');
 });
 
 // Mount routes
@@ -36,14 +49,14 @@ const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const storeRoutes = require('./routes/storeRoutes');
-const reviewRoutes = require('./routes/reviewRoutes'); // Import review routes
+const reviewRoutes = require('./routes/reviewRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
 app.use('/admins', adminRoutes);
 app.use('/store', storeRoutes);
-app.use('/reviews', reviewRoutes); // Mount review routes
+app.use('/reviews', reviewRoutes);
 app.use('/orders', orderRoutes);
 
 // Error Handling Middleware
@@ -59,5 +72,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is listening on PORT: ${PORT}`);
+  console.log(`Server is listening on PORT: ${PORT}`);
 });
