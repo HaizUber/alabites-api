@@ -57,10 +57,23 @@ exports.deleteOrderById = async (req, res) => {
 // Update order status by ID
 exports.updateOrderStatusById = async (req, res) => {
   try {
-    const updatedOrder = await Order.findByIdAndUpdate(req.params.id, { orderStatus: req.body.orderStatus }, { new: true });
-    if (!updatedOrder) return res.status(404).json({ message: 'Order not found' });
+    const updateFields = {
+      orderStatus: req.body.orderStatus,
+    };
+
+    if (req.body.orderStatus === 'Completed') {
+      updateFields.completedAt = new Date().toISOString();
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(req.params.id, updateFields, { new: true });
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
     res.status(200).json(updatedOrder);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
