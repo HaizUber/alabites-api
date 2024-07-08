@@ -7,7 +7,7 @@ require('dotenv').config();
 require('./db'); // Assuming this file sets up your database connection
 
 // CORS Configuration
-const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app'];
+const allowedOrigins = ['http://localhost:3000', 'https://alabites-ordering-app.vercel.app', 'https://alabites-admin-platform.vercel.app/'];
 
 app.use(cors({
   origin: allowedOrigins,
