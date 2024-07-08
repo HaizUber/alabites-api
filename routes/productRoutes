@@ -9,9 +9,10 @@ router.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true'); // Add this line if you're using cookies or authorization headers
   }
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
