@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const Product = require('../models/Product');
 
 // Create a new order
 exports.createOrder = async (req, res) => {
@@ -66,7 +67,7 @@ exports.updateOrderStatusById = async (req, res) => {
     }
 
  // If the order is being canceled, return stock to inventory
- if (orderStatus === 'Cancelled') {
+ if (req.body.orderStatus === 'Cancelled') {
   for (const item of order.items) {
     const product = await Product.findById(item.productId);
 
