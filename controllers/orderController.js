@@ -58,26 +58,34 @@ exports.deleteOrderById = async (req, res) => {
 // Update order status by ID
 exports.updateOrderStatusById = async (req, res) => {
   try {
+    const { orderStatus } = req.body;
     const updateFields = {
-      orderStatus: req.body.orderStatus,
+      orderStatus: orderStatus,
     };
 
-    if (req.body.orderStatus === 'Completed') {
+    if (orderStatus === 'Completed') {
       updateFields.completedAt = new Date().toISOString();
     }
 
- // If the order is being canceled, return stock to inventory
- if (req.body.orderStatus === 'Cancelled') {
-  for (const item of order.items) {
-    const product = await Product.findById(item.productId);
-
-    if (product) {
-      product.stock += item.quantity;
-      await product.save();
+    // Retrieve the order by ID
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
     }
-  }
-}
 
+    // If the order is being canceled, return stock to inventory
+    if (orderStatus === 'Cancelled') {
+      for (const item of order.items) {
+        const product = await Product.findById(item.productId);
+
+        if (product) {
+          product.stock += item.quantity;
+          await product.save();
+        }
+      }
+    }
+
+    // Update the order status
     const updatedOrder = await Order.findByIdAndUpdate(req.params.id, updateFields, { new: true });
 
     if (!updatedOrder) {
