@@ -42,22 +42,34 @@ const getStoreById = async (req, res) => {
 
 const updateStoreById = async (req, res) => {
     try {
-        const storeId = req.params.storeId; // Change id to storeId
+        const storeId = req.params.storeId; // Store ID from the request URL
         const body = req.body;
         
-        // Construct update document
-        const updateDoc = {
-            $set: {
-                storeName: body.storeName,
-                storeType: body.storeType,
-                description: body.description
-            }
-        };
+        // Construct the update document dynamically
+        const updateDoc = {};
         
-        updateDoc.updatedAt = Date.now(); // Update updatedAt field
-        
-        // Find store by storeId and update
-        const updatedStore = await Store.findOneAndUpdate({ storeId }, updateDoc, { new: true });
+        if (body.storeName) {
+            updateDoc.storeName = body.storeName;
+        }
+        if (body.storeType) {
+            updateDoc.storeType = body.storeType;
+        }
+        if (body.description) {
+            updateDoc.description = body.description;
+        }
+        if (body.storepicture) {
+            updateDoc.storepicture = body.storepicture;
+        }
+
+        // Always update the `updatedAt` field
+        updateDoc.updatedAt = Date.now();
+
+        // Find store by `storeId` and update the provided fields
+        const updatedStore = await Store.findOneAndUpdate(
+            { storeId },
+            { $set: updateDoc }, 
+            { new: true } // Return the updated document
+        );
         
         if (!updatedStore) {
             return res.status(404).json({ message: "Store not found" });
@@ -66,9 +78,10 @@ const updateStoreById = async (req, res) => {
         res.status(200).json({ message: "Store updated successfully", data: updatedStore });
     } catch (err) {
         console.error("Error updating store:", err);
-        res.status(500).json({ message: "Cannot Update StorebyID: Internal server error" });
+        res.status(500).json({ message: "Cannot Update Store: Internal server error" });
     }
 };
+
 
 const deleteStoreById = async (req, res) => {
     try {

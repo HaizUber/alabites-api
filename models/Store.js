@@ -23,7 +23,7 @@ const storeSchema = new mongoose.Schema({
         required: true
     },
     storepicture: {
-        type: String, // Store base64 photo link
+        type: String, 
         required: false // Make it optional
     },
     createdAt: {
