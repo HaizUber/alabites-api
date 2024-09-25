@@ -57,13 +57,13 @@ const updateStoreById = async (req, res) => {
         if (body.description) {
             updateDoc.description = body.description;
         }
-        if (body.storePicture !== undefined) {
+        if (body.storePicture !== undefined) { // Allow null to unset the field
             updateDoc.storePicture = body.storePicture;        
         }
         if (body.gcashNumber) {
             updateDoc.gcashNumber = body.gcashNumber; // Update GCash number if provided
         }
-        if (body.gcashQR !== undefined) {
+        if (body.gcashQR !== undefined) { // Allow null to unset the field
             updateDoc.gcashQR = body.gcashQR; // Update GCash QR if provided
         }
 
