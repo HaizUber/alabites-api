@@ -58,7 +58,7 @@ const updateStoreById = async (req, res) => {
             updateDoc.description = body.description;
         }
         if (body.storepicture) {
-            updateDoc.storepicture = body.storepicture;
+            updateDoc.storepicture = body.storePicture;
         }
         if (body.gcashNumber) {
             updateDoc.gcashNumber = body.gcashNumber; // Update GCash number if provided
