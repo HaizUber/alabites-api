@@ -60,6 +60,12 @@ const updateStoreById = async (req, res) => {
         if (body.storepicture) {
             updateDoc.storepicture = body.storepicture;
         }
+        if (body.gcashNumber) {
+            updateDoc.gcashNumber = body.gcashNumber; // Update GCash number if provided
+        }
+        if (body.gcashQR) {
+            updateDoc.gcashQR = body.gcashQR; // Update GCash QR if provided
+        }
 
         // Always update the `updatedAt` field
         updateDoc.updatedAt = Date.now();

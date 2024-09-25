@@ -22,19 +22,26 @@ const storeSchema = new mongoose.Schema({
         type: String, 
         required: true
     },
-    storepicture: {
+    storePicture: {
         type: String, 
-        required: false // Make it optional
+        required: false // Optional field for store picture
+    },
+    gcashNumber: {
+        type: Number,  // Accepts only numbers
+        required: false // Optional field for GCash number
+    },
+    gcashQR: {
+        type: String,   // Accepts a string for GCash QR code
+        required: false // Optional field for GCash QR
     },
     createdAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     },
     updatedAt: {
         type: Date,
-        default: Date.now()
+        default: Date.now
     }
 });
-
 
 module.exports = mongoose.model('Store', storeSchema);
